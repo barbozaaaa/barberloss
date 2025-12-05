@@ -23,5 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-# Firebase credentials (não commitar credenciais)
-src/firebase.ts
+# Firebase credentials
+# Nota: firebase.ts está commitado porque as credenciais são públicas por natureza
+# (aparecem no código JavaScript do cliente). A segurança vem das regras do Firestore.
