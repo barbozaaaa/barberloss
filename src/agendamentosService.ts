@@ -9,18 +9,19 @@ import {
   query, 
   orderBy,
   Timestamp,
-  where,
   doc,
   updateDoc,
   deleteDoc
 } from 'firebase/firestore'
+
+export type ServicoId = 'corte' | 'progressiva' | 'hidratacao' | 'barba' | 'descoloracao' | 'corte_barba' | 'tintura' | 'alisamento' | 'luzes' | 'tratamento' | 'corte_infantil' | 'sobrancelha'
 
 export interface Agendamento {
   nome: string
   telefone: string
   data: string
   horario: string
-  servico: string
+  servico: ServicoId | string
   id?: string
   dataCriacao?: string
   finalizado?: boolean

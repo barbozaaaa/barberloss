@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
+import type { Agendamento, ServicoId } from './agendamentosService'
 
 const GlobalStyle = createGlobalStyle`
   :root {
@@ -335,19 +336,6 @@ const CaixaTitle = styled.h2`
   color: #e5e7eb;
 `
 
-type ServicoId = 'corte' | 'progressiva' | 'hidratacao' | 'barba' | 'descoloracao' | 'corte_barba' | 'tintura' | 'alisamento' | 'luzes' | 'tratamento' | 'corte_infantil' | 'sobrancelha'
-
-interface Agendamento {
-  nome: string
-  telefone: string
-  data: string
-  horario: string
-  servico: ServicoId
-  id: string
-  dataCriacao: string
-  finalizado?: boolean
-  preco?: string
-}
 
 const servicos: {
   id: ServicoId
@@ -441,7 +429,7 @@ function Barbeiro() {
   // Calcular totais da caixa
   const calcularTotal = () => {
     return agendamentosFinalizados.reduce((total, ag) => {
-      const servicoInfo = servicos.find(s => s.id === ag.servico)
+      const servicoInfo = servicos.find(s => s.id === (ag.servico as ServicoId))
       // Usar preço do serviço ou tentar extrair do preço salvo
       if (servicoInfo?.preco) {
         return total + servicoInfo.preco
