@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
 
 const GlobalStyle = createGlobalStyle`
@@ -277,6 +277,8 @@ const ServicesGrid = styled.div`
   scrollbar-width: none;
   -ms-overflow-style: none;
   padding: 8px 0;
+  scroll-snap-type: x mandatory;
+  align-items: flex-start;
 
   &::-webkit-scrollbar {
     display: none;
@@ -288,6 +290,7 @@ const ServiceCardWrapper = styled.div`
   width: 280px;
   height: 100%;
   display: flex;
+  scroll-snap-align: start;
 
   @media (max-width: 480px) {
     width: 260px;
@@ -413,22 +416,6 @@ const ServiceThumb = styled.div<{ imagem: string }>`
     height: 60px;
     border-radius: 12px;
   }
-`
-
-const ServiceIcon = styled.div`
-  position: absolute;
-  bottom: 6px;
-  left: 6px;
-  width: 26px;
-  height: 26px;
-  border-radius: 999px;
-  background: radial-gradient(circle at 20% 0, #fef3c7 0, #f97316 65%);
-  color: #111827;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  flex-shrink: 0;
 `
 
 const ServiceContent = styled.div`
@@ -841,10 +828,6 @@ const ConfirmationText = styled.div`
   gap: 2px;
 `
 
-const ConfirmationTitle = styled.span`
-  font-weight: 600;
-`
-
 const ConfirmationBody = styled.span`
   font-size: 11px;
   color: #a5f3fc;
@@ -1033,7 +1016,11 @@ const criarProximosDias = (quantidade: number) => {
   })
 }
 
-const horariosPadrao = ['09:00', '10:00', '11:00', '14:00', '15:00', '16:00']
+// Generate all hours from 9 AM to 8 PM (9:00 to 20:00)
+const horariosPadrao = Array.from({ length: 12 }, (_, i) => {
+  const hora = 9 + i
+  return `${hora.toString().padStart(2, '0')}:00`
+})
 
 function App() {
   const [selecionado, setSelecionado] = useState<ServicoId>('corte')
@@ -1047,6 +1034,39 @@ function App() {
   const [mensagem, setMensagem] = useState('')
   const [etapaHorario, setEtapaHorario] = useState<'data' | 'hora'>('data')
   const [dataScrollIndex, setDataScrollIndex] = useState(0)
+  const [agendamentosExistentes, setAgendamentosExistentes] = useState<Array<{data: string, horario: string}>>([])
+
+  // Load existing appointments to filter booked times
+  useEffect(() => {
+    const carregarAgendamentos = async () => {
+      try {
+        const { buscarAgendamentos } = await import('./agendamentosService')
+        const ags = await buscarAgendamentos()
+        setAgendamentosExistentes(
+          ags
+            .filter(ag => !ag.finalizado)
+            .map(ag => ({ data: ag.data, horario: ag.horario }))
+        )
+      } catch (error) {
+        console.error('Erro ao carregar agendamentos:', error)
+      }
+    }
+    carregarAgendamentos()
+    // Refresh every 5 seconds to get latest bookings
+    const interval = setInterval(carregarAgendamentos, 5000)
+    return () => clearInterval(interval)
+  }, [])
+
+  // Get available times for selected date (exclude booked times)
+  const getHorariosDisponiveis = () => {
+    if (!form.data) return horariosPadrao
+    
+    const horariosOcupados = agendamentosExistentes
+      .filter(ag => ag.data === form.data)
+      .map(ag => ag.horario)
+    
+    return horariosPadrao.filter(hora => !horariosOcupados.includes(hora))
+  }
 
   const handleSelectServico = (id: ServicoId) => {
     setSelecionado(id)
@@ -1104,12 +1124,10 @@ function App() {
     })
     setEtapaHorario('data')
     setSelecionado('corte')
+    setMensagem('')
     
-    window.open(urlWhatsApp, '_blank')
-    
-    setMensagem(
-      `Redirecionando para WhatsApp... Seu horário para ${servicoInfo?.nome.toLowerCase()} foi reservado para ${formatarResumoData(form.data)} às ${form.horario}, em nome de ${form.nome}.`,
-    )
+    // Open WhatsApp immediately
+    window.location.href = urlWhatsApp
   }
 
   return (
@@ -1198,9 +1216,7 @@ function App() {
                           active={selecionado === servico.id}
                           onClick={() => handleSelectServico(servico.id)}
                         >
-                          <ServiceThumb imagem={servico.imagem}>
-                            <ServiceIcon>{servico.icone}</ServiceIcon>
-                          </ServiceThumb>
+                          <ServiceThumb imagem={servico.imagem} />
                           <ServiceContent>
                             <ServiceTitleRow>
                               <ServiceName>{servico.nome}</ServiceName>
@@ -1331,18 +1347,24 @@ function App() {
                     </DateCarousel>
                   ) : (
                     <TimeGrid>
-                      {horariosPadrao.map((hora) => (
-                        <TimeCard
-                          key={hora}
-                          type="button"
-                          active={form.horario === hora}
-                          onClick={() =>
-                            setForm((prev) => ({ ...prev, horario: hora }))
-                          }
-                        >
-                          {hora}
-                        </TimeCard>
-                      ))}
+                      {getHorariosDisponiveis().length > 0 ? (
+                        getHorariosDisponiveis().map((hora) => (
+                          <TimeCard
+                            key={hora}
+                            type="button"
+                            active={form.horario === hora}
+                            onClick={() =>
+                              setForm((prev) => ({ ...prev, horario: hora }))
+                            }
+                          >
+                            {hora}
+                          </TimeCard>
+                        ))
+                      ) : (
+                        <div style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#9ca3af', padding: '20px', fontSize: '13px' }}>
+                          Todos os horários estão ocupados para esta data. Por favor, escolha outra data.
+                        </div>
+                      )}
                     </TimeGrid>
                   )}
                 </div>
@@ -1360,9 +1382,8 @@ function App() {
 
               {mensagem && (
                 <Confirmation>
-                  <ConfirmationIcon>✅</ConfirmationIcon>
+                  <ConfirmationIcon>⚠️</ConfirmationIcon>
                   <ConfirmationText>
-                    <ConfirmationTitle>Horário reservado (simulação)</ConfirmationTitle>
                     <ConfirmationBody>{mensagem}</ConfirmationBody>
                   </ConfirmationText>
                 </Confirmation>
