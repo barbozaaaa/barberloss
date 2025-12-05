@@ -37,7 +37,12 @@ const Page = styled.div`
 const Shell = styled.div`
   max-width: 1120px;
   margin: 0 auto;
-  padding: 24px 20px 80px;
+  padding: 16px 12px 60px;
+  width: 100%;
+
+  @media (min-width: 480px) {
+    padding: 20px 16px 70px;
+  }
 
   @media (min-width: 1024px) {
     padding: 32px 20px 96px;
@@ -73,13 +78,18 @@ const LogoText = styled.div`
 `
 
 const BrandName = styled.span`
-  font-size: 24px;
-  letter-spacing: 0.16em;
+  font-size: 20px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   background: linear-gradient(120deg, #f97316, #facc15);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+
+  @media (min-width: 480px) {
+    font-size: 24px;
+    letter-spacing: 0.16em;
+  }
 `
 
 const BrandSubtitle = styled.span`
@@ -103,10 +113,16 @@ const AgendamentosHeader = styled.div`
 `
 
 const AgendamentosTitle = styled.h1`
-  font-size: 24px;
-  letter-spacing: 0.18em;
+  font-size: 18px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #e5e7eb;
+  word-break: break-word;
+
+  @media (min-width: 480px) {
+    font-size: 24px;
+    letter-spacing: 0.18em;
+  }
 `
 
 const AgendamentosCount = styled.span`
@@ -144,13 +160,21 @@ const AgendamentoCard = styled.div`
   background: rgba(15, 23, 42, 0.96);
   border: 1px solid rgba(55, 65, 81, 0.9);
   border-radius: 16px;
-  padding: 18px 20px;
+  padding: 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
   transition: all 150ms ease;
   margin-bottom: 12px;
+  flex-wrap: wrap;
+
+  @media (max-width: 480px) {
+    padding: 14px;
+    gap: 10px;
+    flex-direction: column;
+    align-items: stretch;
+  }
 
   &:hover {
     border-color: rgba(251, 191, 36, 0.7);
@@ -176,23 +200,35 @@ const AgendamentoNome = styled.div`
 const AgendamentoDetalhes = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
-  font-size: 13px;
+  gap: 12px;
+  font-size: 12px;
   color: #9ca3af;
+
+  @media (max-width: 480px) {
+    font-size: 11px;
+    gap: 8px;
+    flex-direction: column;
+  }
 `
 
 const AgendamentoHorario = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 15px;
+  gap: 6px;
+  font-size: 13px;
   font-weight: 700;
   color: #fbbf24;
-  padding: 10px 16px;
+  padding: 8px 12px;
   border-radius: 999px;
   background: rgba(251, 191, 36, 0.2);
   border: 1px solid rgba(251, 191, 36, 0.4);
   white-space: nowrap;
+  flex-shrink: 0;
+
+  @media (max-width: 480px) {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
 `
 
 const AgendamentoServico = styled.span`
@@ -214,9 +250,15 @@ const EmptyState = styled.div`
 
 const CaixaContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-  margin-bottom: 32px;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+
+  @media (min-width: 480px) {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
 `
 
 const CaixaCard = styled.div`
@@ -237,23 +279,36 @@ const CaixaLabel = styled.div`
 `
 
 const CaixaValor = styled.div`
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 700;
   color: #fbbf24;
+  word-break: break-word;
+
+  @media (min-width: 480px) {
+    font-size: 28px;
+  }
 `
 
 const FinalizarButton = styled.button<{ finalizado?: boolean }>`
-  padding: 8px 16px;
+  padding: 10px 14px;
   border-radius: 999px;
   border: none;
   outline: none;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   transition: all 150ms ease;
   white-space: nowrap;
+  min-width: fit-content;
+  flex-shrink: 0;
+  
+  @media (max-width: 480px) {
+    padding: 8px 12px;
+    font-size: 10px;
+    letter-spacing: 0.03em;
+  }
   
   ${({ finalizado }) => finalizado 
     ? `
@@ -283,31 +338,54 @@ const AgendamentoCardContent = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
   flex: 1;
+  width: 100%;
+  flex-wrap: wrap;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
 `
 
 const AgendamentoActions = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+
+  @media (max-width: 480px) {
+    width: 100%;
+    justify-content: space-between;
+  }
 `
 
 const ResetButton = styled.button`
-  padding: 10px 20px;
+  padding: 10px 16px;
   border-radius: 999px;
   border: 1px solid rgba(239, 68, 68, 0.4);
   background: rgba(239, 68, 68, 0.15);
   color: #ef4444;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
   transition: all 150ms ease;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  @media (max-width: 480px) {
+    padding: 8px 12px;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+  }
 
   &:hover {
     background: rgba(239, 68, 68, 0.25);
@@ -330,10 +408,16 @@ const CaixaHeader = styled.div`
 `
 
 const CaixaTitle = styled.h2`
-  font-size: 18px;
-  letter-spacing: 0.18em;
+  font-size: 14px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #e5e7eb;
+  word-break: break-word;
+
+  @media (min-width: 480px) {
+    font-size: 18px;
+    letter-spacing: 0.18em;
+  }
 `
 
 
@@ -461,10 +545,11 @@ function Barbeiro() {
   const handleResetarCaixa = async () => {
     if (window.confirm('Tem certeza que deseja resetar a caixa? Todos os agendamentos finalizados serão REMOVIDOS permanentemente.')) {
       try {
-        const { resetarCaixa } = await import('./agendamentosService')
+        const { resetarCaixa, buscarAgendamentos } = await import('./agendamentosService')
         await resetarCaixa()
+        // Aguardar um pouco para garantir que a operação foi concluída
+        await new Promise(resolve => setTimeout(resolve, 500))
         // Recarregar agendamentos
-        const { buscarAgendamentos } = await import('./agendamentosService')
         const ags = await buscarAgendamentos()
         setAgendamentos(ags)
         alert('✅ Caixa resetada com sucesso! Agendamentos finalizados foram removidos.')
@@ -552,10 +637,10 @@ function Barbeiro() {
                               </AgendamentoHorario>
                               <FinalizarButton
                                 finalizado={ag.finalizado}
-                                onClick={() => !ag.finalizado && handleFinalizar(ag.id!)}
+                                onClick={() => !ag.finalizado && ag.id && handleFinalizar(ag.id)}
                                 disabled={ag.finalizado}
                               >
-                                {ag.finalizado ? '✅ Finalizado' : '✓ Finalizar'}
+                                {ag.finalizado ? '✓ Feito' : '✓ Finalizar'}
                               </FinalizarButton>
                             </AgendamentoActions>
                           </AgendamentoCardContent>

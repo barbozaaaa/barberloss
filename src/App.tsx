@@ -36,7 +36,12 @@ const Page = styled.div`
 const Shell = styled.div`
   max-width: 1120px;
   margin: 0 auto;
-  padding: 24px 20px 80px;
+  padding: 16px 12px 60px;
+  width: 100%;
+
+  @media (min-width: 480px) {
+    padding: 20px 16px 70px;
+  }
 
   @media (min-width: 1024px) {
     padding: 32px 20px 96px;
@@ -78,13 +83,18 @@ const LogoText = styled.div`
 `
 
 const BrandName = styled.span`
-  font-size: 18px;
-  letter-spacing: 0.16em;
+  font-size: 16px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   background: linear-gradient(120deg, #f97316, #facc15);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+
+  @media (min-width: 480px) {
+    font-size: 18px;
+    letter-spacing: 0.16em;
+  }
 `
 
 const BrandSubtitle = styled.span`
@@ -251,7 +261,11 @@ const SectionSubtitle = styled.p`
 const ServicesCarousel = styled.div`
   position: relative;
   overflow: hidden;
-  padding: 0 40px;
+  padding: 0 35px;
+
+  @media (max-width: 480px) {
+    padding: 0 30px;
+  }
 `
 
 const ServicesGrid = styled.div`
@@ -274,19 +288,27 @@ const ServiceCardWrapper = styled.div`
   width: 280px;
   height: 100%;
   display: flex;
+
+  @media (max-width: 480px) {
+    width: 260px;
+  }
+
+  @media (max-width: 360px) {
+    width: 240px;
+  }
 `
 
 const CarouselButton = styled.button`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: 1px solid rgba(251, 191, 36, 0.4);
   background: rgba(15, 23, 42, 0.95);
   color: #fbbf24;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
   cursor: pointer;
   display: flex;
@@ -295,6 +317,12 @@ const CarouselButton = styled.button`
   z-index: 10;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   transition: all 150ms ease;
+
+  @media (max-width: 480px) {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
 
   &:hover {
     background: rgba(15, 23, 42, 1);
@@ -322,8 +350,8 @@ const CarouselButtonRight = styled(CarouselButton)`
 
 const ServiceCard = styled.button<{ active?: boolean }>`
   position: relative;
-  border-radius: 20px;
-  padding: 14px;
+  border-radius: 16px;
+  padding: 12px;
   text-align: left;
   cursor: pointer;
   border: 1px solid
@@ -340,7 +368,7 @@ const ServiceCard = styled.button<{ active?: boolean }>`
         : '0 10px 30px rgba(15, 23, 42, 0.85)'};
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
   min-height: 140px;
   transition:
@@ -348,6 +376,13 @@ const ServiceCard = styled.button<{ active?: boolean }>`
     box-shadow 150ms ease,
     border-color 150ms ease,
     background 150ms ease;
+
+  @media (max-width: 480px) {
+    padding: 10px;
+    gap: 8px;
+    min-height: 130px;
+    border-radius: 14px;
+  }
 
   &:hover {
     transform: translateY(-1px);
@@ -364,7 +399,7 @@ const ServiceCard = styled.button<{ active?: boolean }>`
 const ServiceThumb = styled.div<{ imagem: string }>`
   width: 70px;
   height: 70px;
-  border-radius: 20px;
+  border-radius: 16px;
   background-image: url(${({ imagem }) => imagem});
   background-size: cover;
   background-position: center;
@@ -372,6 +407,12 @@ const ServiceThumb = styled.div<{ imagem: string }>`
   position: relative;
   overflow: hidden;
   box-shadow: 0 10px 28px rgba(15, 23, 42, 0.9);
+
+  @media (max-width: 480px) {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+  }
 `
 
 const ServiceIcon = styled.div`
@@ -398,6 +439,11 @@ const ServiceContent = styled.div`
   min-width: 0;
   height: 100%;
   justify-content: space-between;
+  overflow: hidden;
+
+  @media (max-width: 480px) {
+    gap: 3px;
+  }
 `
 
 const ServiceTitleRow = styled.div`
@@ -411,22 +457,45 @@ const ServiceName = styled.div`
   font-size: 14px;
   font-weight: 500;
   color: #f9fafb;
+  word-break: break-word;
+  line-height: 1.3;
+
+  @media (max-width: 480px) {
+    font-size: 13px;
+  }
 `
 
 const ServiceTag = styled.span`
-  font-size: 10px;
+  font-size: 9px;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   color: #fbbf24;
   white-space: nowrap;
   flex-shrink: 0;
+
+  @media (max-width: 480px) {
+    font-size: 8px;
+    letter-spacing: 0.08em;
+  }
 `
 
 const ServiceDescription = styled.p`
   font-size: 10px;
   color: #9ca3af;
-  line-height: 1.35;
+  line-height: 1.4;
   overflow: visible;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media (max-width: 480px) {
+    font-size: 9px;
+    line-height: 1.35;
+    -webkit-line-clamp: 2;
+  }
 `
 
 const ServiceMetaRow = styled.div`
@@ -449,8 +518,8 @@ const ServicePrice = styled.span`
 
 const FormCard = styled.section`
   position: relative;
-  border-radius: 22px;
-  padding: 18px 18px 20px;
+  border-radius: 20px;
+  padding: 16px;
   background:
     radial-gradient(circle at 0 0, rgba(251, 191, 36, 0.25), transparent 55%),
     radial-gradient(circle at 100% 100%, rgba(37, 99, 235, 0.3), transparent 60%),
@@ -459,6 +528,11 @@ const FormCard = styled.section`
     0 22px 60px rgba(15, 23, 42, 0.95),
     0 0 0 1px rgba(15, 23, 42, 0.9);
   overflow: hidden;
+
+  @media (min-width: 480px) {
+    padding: 18px 18px 20px;
+    border-radius: 22px;
+  }
 
   @media (min-width: 960px) {
     margin-top: 8px;
@@ -562,7 +636,11 @@ const StepBackButton = styled.button`
 const DateCarousel = styled.div`
   position: relative;
   overflow: hidden;
-  padding: 0 40px;
+  padding: 0 35px;
+
+  @media (max-width: 480px) {
+    padding: 0 30px;
+  }
 `
 
 const DateGrid = styled.div`
@@ -582,18 +660,23 @@ const DateCardWrapper = styled.div`
   flex-shrink: 0;
   width: calc((100% - 32px) / 5);
   min-width: 0;
+
+  @media (max-width: 480px) {
+    width: calc((100% - 24px) / 5);
+    min-width: 60px;
+  }
 `
 
 const DateCard = styled.button<{ active?: boolean }>`
   width: 100%;
-  border-radius: 13px;
-  padding: 7px 8px;
+  border-radius: 12px;
+  padding: 6px 7px;
   border: 1px solid
     ${({ active }) =>
       active ? 'rgba(251, 191, 36, 0.95)' : 'rgba(55, 65, 81, 0.9)'};
   background: rgba(15, 23, 42, 0.96);
   color: #e5e7eb;
-  font-size: 12px;
+  font-size: 11px;
   text-align: left;
   cursor: pointer;
   display: flex;
@@ -604,6 +687,13 @@ const DateCard = styled.button<{ active?: boolean }>`
     background 140ms ease,
     transform 140ms ease,
     box-shadow 140ms ease;
+  word-break: break-word;
+
+  @media (max-width: 480px) {
+    padding: 5px 6px;
+    font-size: 10px;
+    border-radius: 10px;
+  }
 
   &:hover {
     border-color: rgba(251, 191, 36, 0.95);
@@ -613,16 +703,29 @@ const DateCard = styled.button<{ active?: boolean }>`
 `
 
 const DateLabel = styled.span`
-  font-size: 11px;
+  font-size: 10px;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   color: #9ca3af;
+  word-break: break-word;
+  line-height: 1.2;
+
+  @media (max-width: 480px) {
+    font-size: 9px;
+    letter-spacing: 0.08em;
+  }
 `
 
 const DateSubLabel = styled.span`
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   color: #f9fafb;
+  word-break: break-word;
+  line-height: 1.2;
+
+  @media (max-width: 480px) {
+    font-size: 11px;
+  }
 `
 
 const TimeGrid = styled.div`
