@@ -1,73 +1,116 @@
-# React + TypeScript + Vite
+# 💇 Barber Loss - Sistema de Agendamento
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Sistema completo de agendamento para barbearia com painel administrativo do barbeiro.
 
-Currently, two official plugins are available:
+## 🚀 Funcionalidades
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- ✅ **Site de Agendamento**: Interface para clientes agendarem serviços
+- ✅ **Painel do Barbeiro**: Sistema administrativo para gerenciar agendamentos
+- ✅ **Integração Firebase**: Sincronização em tempo real entre dispositivos
+- ✅ **Contador de Caixa**: Controle financeiro diário
+- ✅ **Design Responsivo**: Interface moderna e adaptável
 
-## React Compiler
+## 📋 Pré-requisitos
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Node.js 18+ 
+- npm ou yarn
+- Conta no Firebase (para sincronização em tempo real)
 
-## Expanding the ESLint configuration
+## 🔧 Instalação
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Clone o repositório:
+```bash
+git clone https://github.com/barbozaaaa/barberloss.git
+cd barberloss
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+2. Instale as dependências:
+```bash
+npm install
 ```
+
+3. Configure o Firebase:
+   - Copie o arquivo `src/firebase.example.ts` para `src/firebase.ts`
+   - Siga as instruções em `CONFIGURAR_FIREBASE_AGORA.md`
+   - Cole suas credenciais do Firebase no arquivo `src/firebase.ts`
+
+4. Inicie o servidor de desenvolvimento:
+```bash
+npm run dev
+```
+
+## 🔥 Configuração do Firebase
+
+⚠️ **IMPORTANTE**: O arquivo `src/firebase.ts` não está no repositório por segurança.
+
+Para configurar:
+
+1. Renomeie `src/firebase.example.ts` para `src/firebase.ts`
+2. Siga o guia completo em `CONFIGURAR_FIREBASE_AGORA.md`
+3. Configure as regras do Firestore usando `REGRAS_FIRESTORE.txt`
+
+## 📱 Como Usar
+
+### Site de Agendamento
+- Acesse: `http://localhost:5173`
+- Cliente seleciona serviço, data e horário
+- Preenche dados pessoais
+- Agendamento é salvo no Firebase
+
+### Painel do Barbeiro
+- Acesse: `http://localhost:5173#barbeiro`
+- Visualiza todos os agendamentos organizados por data
+- Marca agendamentos como finalizados
+- Controla o caixa diário
+- Reseta o caixa quando necessário
+
+## 🛠️ Tecnologias
+
+- **React** + **TypeScript**
+- **Vite** - Build tool
+- **Styled Components** - Estilização
+- **Firebase Firestore** - Banco de dados
+- **localStorage** - Fallback quando Firebase não está configurado
+
+## 📁 Estrutura do Projeto
+
+```
+barbearia/
+├── src/
+│   ├── App.tsx              # Site de agendamento
+│   ├── Barbeiro.tsx         # Painel do barbeiro
+│   ├── firebase.example.ts  # Template de configuração
+│   ├── firebase.ts          # Configuração Firebase (não commitado)
+│   ├── agendamentosService.ts # Serviço de agendamentos
+│   └── main.tsx             # Entry point
+├── CONFIGURAR_FIREBASE_AGORA.md
+├── REGRAS_FIRESTORE.txt
+└── README.md
+```
+
+## 🔐 Segurança
+
+- Credenciais do Firebase estão no `.gitignore`
+- Use variáveis de ambiente em produção
+- Configure regras do Firestore adequadamente
+
+## 📝 Scripts Disponíveis
+
+- `npm run dev` - Inicia servidor de desenvolvimento
+- `npm run build` - Cria build de produção
+- `npm run preview` - Preview do build de produção
+
+## 🚀 Deploy
+
+O projeto pode ser deployado em:
+- **Vercel**: Conecte o repositório GitHub
+- **Netlify**: Conecte o repositório GitHub
+- **Firebase Hosting**: Use `firebase deploy`
+
+## 📄 Licença
+
+Este projeto é privado.
+
+---
+
+Desenvolvido com ❤️ para Barber Loss
