@@ -431,7 +431,7 @@ const servicos: {
   { id: 'barba', nome: 'Barba', icone: '🧔', preco: 30 },
   { id: 'corte_barba', nome: 'Corte e barba', icone: '💈', preco: 60 },
   { id: 'luzes', nome: 'Corte com luzes (platinado)', icone: '⭐', preco: 100 },
-  { id: 'pintura_global', nome: 'Corte pinturas global (platinado)', icone: '✨', preco: 120 },
+  { id: 'pintura_global', nome: 'Platinado', icone: '✨', preco: 120 },
   { id: 'pigmentacao_corte', nome: 'Pigmentação e Corte', icone: '🎨', preco: 70 },
 ]
 
@@ -481,9 +481,10 @@ function Barbeiro() {
       try {
         const { buscarAgendamentos } = await import('./agendamentosService')
         const ags = await buscarAgendamentos()
+        console.log('📋 Agendamentos carregados no painel:', ags.length, ags)
         setAgendamentos(ags)
       } catch (e) {
-        console.error('Erro ao carregar agendamentos:', e)
+        console.error('❌ Erro ao carregar agendamentos:', e)
       }
     }
 

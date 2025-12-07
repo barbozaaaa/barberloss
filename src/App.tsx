@@ -892,7 +892,7 @@ const servicos: {
   },
   {
     id: 'pintura_global',
-    nome: 'Corte pinturas global (platinado)',
+    nome: 'Platinado',
     tag: 'Transformação',
     descricao:
       'Corte de cabelo premium com pintura global platinada para um visual moderno e impactante.',

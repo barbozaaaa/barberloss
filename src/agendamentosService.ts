@@ -38,7 +38,7 @@ export const salvarAgendamento = async (agendamento: Omit<Agendamento, 'id' | 'd
   if (isFirebaseAvailable()) {
     // Salvar no Firebase
     try {
-      await addDoc(collection(db, 'agendamentos'), {
+      const docRef = await addDoc(collection(db, 'agendamentos'), {
         nome: agendamento.nome,
         telefone: agendamento.telefone,
         data: agendamento.data,
@@ -48,7 +48,8 @@ export const salvarAgendamento = async (agendamento: Omit<Agendamento, 'id' | 'd
         finalizado: false,
         dataCriacao: Timestamp.now(),
       })
-      console.log('✅ Agendamento salvo no Firebase')
+      console.log('✅ Agendamento salvo no Firebase com ID:', docRef.id)
+      console.log('📝 Dados salvos:', agendamento)
     } catch (error) {
       console.error('❌ Erro ao salvar no Firebase:', error)
       // Fallback para localStorage
@@ -56,6 +57,7 @@ export const salvarAgendamento = async (agendamento: Omit<Agendamento, 'id' | 'd
     }
   } else {
     // Salvar no localStorage
+    console.log('💾 Salvando no localStorage (Firebase não disponível)')
     salvarNoLocalStorage(agendamento)
   }
 }
@@ -107,6 +109,9 @@ export const buscarAgendamentos = async (): Promise<Agendamento[]> => {
       })
       
       console.log(`✅ ${agendamentos.length} agendamentos carregados do Firebase`)
+      if (agendamentos.length > 0) {
+        console.log('📋 Primeiro agendamento:', agendamentos[0])
+      }
       return agendamentos
     } catch (error) {
       console.error('❌ Erro ao buscar do Firebase:', error)
