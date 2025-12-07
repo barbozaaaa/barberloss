@@ -427,11 +427,11 @@ const servicos: {
   icone: string
   preco: number
 }[] = [
-  { id: 'corte', nome: 'Corte de cabelo premium', icone: '✂️', preco: 50 },
-  { id: 'barba', nome: 'Barba desenhada', icone: '🧔', preco: 30 },
-  { id: 'corte_barba', nome: 'Corte + Barba', icone: '💈', preco: 60 },
+  { id: 'corte', nome: 'Corte', icone: '✂️', preco: 50 },
+  { id: 'barba', nome: 'Barba', icone: '🧔', preco: 30 },
+  { id: 'corte_barba', nome: 'Corte e barba', icone: '💈', preco: 60 },
   { id: 'luzes', nome: 'Corte com luzes (platinado)', icone: '⭐', preco: 100 },
-  { id: 'pintura_global', nome: 'Corte com pintura global (platinado)', icone: '✨', preco: 120 },
+  { id: 'pintura_global', nome: 'Corte pinturas global (platinado)', icone: '✨', preco: 120 },
   { id: 'pigmentacao_corte', nome: 'Pigmentação e Corte', icone: '🎨', preco: 70 },
 ]
 

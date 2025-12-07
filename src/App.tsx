@@ -849,7 +849,7 @@ const servicos: {
 }[] = [
   {
     id: 'corte',
-    nome: 'Corte de cabelo premium',
+    nome: 'Corte',
     tag: 'Clássico + moderno',
     descricao: 'Máquina e tesoura com acabamento na navalha, alinhado ao seu estilo.',
     preco: 'R$ 50',
@@ -859,7 +859,7 @@ const servicos: {
   },
   {
     id: 'barba',
-    nome: 'Barba desenhada',
+    nome: 'Barba',
     tag: 'Navalha quente',
     descricao:
       'Barba modelada, toalha quente e finalização com massagem facial relaxante.',
@@ -870,7 +870,7 @@ const servicos: {
   },
   {
     id: 'corte_barba',
-    nome: 'Corte + Barba',
+    nome: 'Corte e barba',
     tag: 'Combo completo',
     descricao:
       'Corte de cabelo premium com barba desenhada. O combo perfeito para um visual impecável.',
@@ -892,7 +892,7 @@ const servicos: {
   },
   {
     id: 'pintura_global',
-    nome: 'Corte com pintura global (platinado)',
+    nome: 'Corte pinturas global (platinado)',
     tag: 'Transformação',
     descricao:
       'Corte de cabelo premium com pintura global platinada para um visual moderno e impactante.',
