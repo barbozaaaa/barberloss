@@ -37,7 +37,7 @@ const Page = styled.div`
 const Shell = styled.div`
   max-width: 1120px;
   margin: 0 auto;
-  padding: 16px 12px 60px;
+  padding: 12px 10px 40px;
   width: 100%;
 
   @media (min-width: 480px) {
@@ -54,7 +54,7 @@ const Header = styled.header`
   align-items: center;
   justify-content: center;
   gap: 16px;
-  padding-bottom: 24px;
+  padding: 12px 0 16px;
   border-bottom: 1px solid rgba(148, 163, 184, 0.25);
   backdrop-filter: blur(18px);
   position: sticky;
@@ -66,7 +66,12 @@ const Header = styled.header`
       rgba(15, 23, 42, 0.92)
     )
     border-box;
-  margin-bottom: 32px;
+  margin-bottom: 20px;
+
+  @media (min-width: 480px) {
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+  }
 `
 
 const LogoText = styled.div`
@@ -78,8 +83,8 @@ const LogoText = styled.div`
 `
 
 const BrandName = styled.span`
-  font-size: 20px;
-  letter-spacing: 0.12em;
+  font-size: 16px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   background: linear-gradient(120deg, #f97316, #facc15);
   -webkit-background-clip: text;
@@ -146,14 +151,21 @@ const AgendamentoGroup = styled.div`
 `
 
 const AgendamentoGroupDate = styled.div`
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
   color: #fbbf24;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
   border-bottom: 2px solid rgba(251, 191, 36, 0.4);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
+
+  @media (min-width: 480px) {
+    font-size: 16px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    letter-spacing: 0.1em;
+  }
 `
 
 const AgendamentoCard = styled.div`
@@ -192,9 +204,13 @@ const AgendamentoInfo = styled.div`
 `
 
 const AgendamentoNome = styled.div`
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   color: #f9fafb;
+
+  @media (max-width: 480px) {
+    font-size: 14px;
+  }
 `
 
 const AgendamentoDetalhes = styled.div`
@@ -250,9 +266,9 @@ const EmptyState = styled.div`
 
 const CaixaContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 12px;
-  margin-bottom: 24px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 20px;
 
   @media (min-width: 480px) {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -264,11 +280,17 @@ const CaixaContainer = styled.div`
 const CaixaCard = styled.div`
   background: rgba(15, 23, 42, 0.96);
   border: 1px solid rgba(251, 191, 36, 0.4);
-  border-radius: 16px;
-  padding: 20px;
+  border-radius: 12px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
+
+  @media (min-width: 480px) {
+    border-radius: 16px;
+    padding: 20px;
+    gap: 8px;
+  }
 `
 
 const CaixaLabel = styled.div`
@@ -279,7 +301,7 @@ const CaixaLabel = styled.div`
 `
 
 const CaixaValor = styled.div`
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 700;
   color: #fbbf24;
   word-break: break-word;
@@ -380,6 +402,7 @@ const FinalizarButton = styled.button<{ finalizado?: boolean }>`
     padding: 8px 12px;
     font-size: 10px;
     letter-spacing: 0.03em;
+    width: 100%;
   }
   
   ${({ finalizado }) => finalizado 
@@ -413,12 +436,11 @@ const AgendamentoCardContent = styled.div`
   gap: 12px;
   flex: 1;
   width: 100%;
-  flex-wrap: wrap;
 
   @media (max-width: 480px) {
     flex-direction: column;
     align-items: stretch;
-    gap: 10px;
+    gap: 12px;
   }
 `
 
