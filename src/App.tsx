@@ -1038,8 +1038,26 @@ function App() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // Validações básicas
     if (!form.nome || !form.telefone || !form.data || !form.horario) {
       setMensagem('Preencha todos os campos para confirmar seu horário.')
+      return
+    }
+
+    // Validar telefone (apenas números, mínimo 10 dígitos)
+    const telefoneLimpo = form.telefone.replace(/\D/g, '')
+    if (telefoneLimpo.length < 10) {
+      setMensagem('Por favor, insira um telefone válido com DDD.')
+      return
+    }
+
+    // Validar se a data não é no passado
+    const dataSelecionada = new Date(form.data + 'T00:00:00')
+    const hoje = new Date()
+    hoje.setHours(0, 0, 0, 0)
+    if (dataSelecionada < hoje) {
+      setMensagem('Não é possível agendar para datas passadas. Por favor, escolha uma data futura.')
       return
     }
 
@@ -1059,31 +1077,36 @@ function App() {
     try {
       const { salvarAgendamento } = await import('./agendamentosService')
       await salvarAgendamento({
-        nome: form.nome,
-        telefone: form.telefone,
+        nome: form.nome.trim(),
+        telefone: form.telefone.trim(),
         data: form.data,
         horario: form.horario,
         servico: form.servico,
         preco: servicoInfo?.preco || 'R$ 0',
       })
+      
+      // Mostrar mensagem de sucesso brevemente
+      setMensagem('✅ Agendamento salvo! Redirecionando para WhatsApp...')
+      
+      // Limpar formulário
+      setForm({
+        nome: '',
+        telefone: '',
+        data: '',
+        horario: '',
+        servico: 'corte',
+      })
+      setEtapaHorario('data')
+      setSelecionado('corte')
+      
+      // Aguardar um pouco antes de redirecionar para mostrar a mensagem
+      setTimeout(() => {
+        window.location.href = urlWhatsApp
+      }, 1000)
     } catch (error) {
       console.error('Erro ao salvar agendamento:', error)
+      setMensagem('❌ Erro ao salvar agendamento. Por favor, tente novamente ou entre em contato pelo WhatsApp.')
     }
-    
-    // Limpar formulário
-    setForm({
-      nome: '',
-      telefone: '',
-      data: '',
-      horario: '',
-      servico: 'corte',
-    })
-    setEtapaHorario('data')
-    setSelecionado('corte')
-    setMensagem('')
-    
-    // Open WhatsApp immediately
-    window.location.href = urlWhatsApp
   }
 
   return (
