@@ -1057,15 +1057,37 @@ function App() {
     return () => clearInterval(interval)
   }, [])
 
-  // Get available times for selected date (exclude booked times)
+  // Get available times for selected date (exclude booked times and past times for today)
   const getHorariosDisponiveis = () => {
     if (!form.data) return horariosPadrao
     
+    // Check if selected date is today
+    const hoje = new Date()
+    const hojeISO = hoje.toISOString().slice(0, 10)
+    const isHoje = form.data === hojeISO
+    
+    // Get current time in HH:MM format
+    const agora = new Date()
+    const horaAtual = agora.getHours()
+    const minutoAtual = agora.getMinutes()
+    const horaAtualFormatada = `${horaAtual.toString().padStart(2, '0')}:${minutoAtual.toString().padStart(2, '0')}`
+    
+    // Filter out booked times
     const horariosOcupados = agendamentosExistentes
       .filter(ag => ag.data === form.data)
       .map(ag => ag.horario)
     
-    return horariosPadrao.filter(hora => !horariosOcupados.includes(hora))
+    let horariosFiltrados = horariosPadrao.filter(hora => !horariosOcupados.includes(hora))
+    
+    // If it's today, filter out past times
+    if (isHoje) {
+      horariosFiltrados = horariosFiltrados.filter(hora => {
+        // Compare time strings (HH:MM format)
+        return hora > horaAtualFormatada
+      })
+    }
+    
+    return horariosFiltrados
   }
 
   const handleSelectServico = (id: ServicoId) => {
