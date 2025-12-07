@@ -289,6 +289,78 @@ const CaixaValor = styled.div`
   }
 `
 
+const NotificacaoProximo = styled.div`
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(22, 163, 74, 0.15));
+  border: 2px solid rgba(34, 197, 94, 0.5);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+
+  @media (max-width: 480px) {
+    padding: 12px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+`
+
+const NotificacaoTexto = styled.div`
+  flex: 1;
+  color: #d1fae5;
+  font-size: 14px;
+  line-height: 1.5;
+
+  @media (max-width: 480px) {
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+`
+
+const NotificacaoTitulo = styled.div`
+  font-weight: 700;
+  color: #86efac;
+  margin-bottom: 4px;
+  font-size: 15px;
+
+  @media (max-width: 480px) {
+    font-size: 14px;
+  }
+`
+
+const LembreteButton = styled.button`
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  background: linear-gradient(120deg, #22c55e, #16a34a);
+  color: #052e16;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(34, 197, 94, 0.4);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  @media (max-width: 480px) {
+    width: 100%;
+    padding: 12px;
+  }
+`
+
 const FinalizarButton = styled.button<{ finalizado?: boolean }>`
   padding: 10px 14px;
   border-radius: 999px;
@@ -510,7 +582,16 @@ function Barbeiro() {
     // Atualizar a cada 3 segundos para pegar novos agendamentos
     const interval = setInterval(carregarAgendamentos, 3000)
     
-    return () => clearInterval(interval)
+    // Verificar agendamentos próximos a cada minuto
+    const intervalProximos = setInterval(() => {
+      // Força re-render para atualizar notificações
+      setAgendamentos(prev => [...prev])
+    }, 60000) // 1 minuto
+    
+    return () => {
+      clearInterval(interval)
+      clearInterval(intervalProximos)
+    }
   }, [])
 
   const agendamentosFuturos = agendamentos.filter(ag => {
@@ -555,11 +636,45 @@ function Barbeiro() {
 
   const agendamentosFinalizados = agendamentos.filter(ag => ag.finalizado === true)
   
+  // Verificar agendamentos próximos (30 minutos antes)
+  const agendamentosProximos = agendamentosFuturos.filter(ag => {
+    try {
+      if (!ag.data || !ag.horario) return false
+      
+      const [hora, minuto] = ag.horario.split(':').map(Number)
+      const dataAgendamento = new Date(ag.data)
+      dataAgendamento.setHours(hora, minuto, 0, 0)
+      
+      const agora = new Date()
+      const diferencaMinutos = (dataAgendamento.getTime() - agora.getTime()) / (1000 * 60)
+      
+      // Entre 30 e 35 minutos antes (janela de 5 minutos para enviar)
+      return diferencaMinutos >= 25 && diferencaMinutos <= 35
+    } catch (error) {
+      return false
+    }
+  })
+  
+  // Função para enviar lembrete via WhatsApp
+  const enviarLembreteWhatsApp = (ag: Agendamento) => {
+    const servicoInfo = servicos.find(s => s.id === ag.servico as ServicoId)
+    const mensagem = `Olá ${ag.nome}! 👋\n\n` +
+      `Este é um lembrete do seu agendamento:\n\n` +
+      `📅 *Data:* ${formatarDataCompleta(ag.data)}\n` +
+      `🕐 *Horário:* ${ag.horario}\n` +
+      `✂️ *Serviço:* ${servicoInfo?.nome || ag.servico}\n\n` +
+      `Nos vemos em breve! 😊`
+    
+    const telefoneLimpo = ag.telefone.replace(/\D/g, '')
+    const urlWhatsApp = `https://wa.me/55${telefoneLimpo}?text=${encodeURIComponent(mensagem)}`
+    window.open(urlWhatsApp, '_blank')
+  }
+  
   console.log('📊 Resumo:', {
     total: agendamentos.length,
     futuros: agendamentosFuturos.length,
     finalizados: agendamentosFinalizados.length,
-    agendamentosFuturos: agendamentosFuturos
+    proximos: agendamentosProximos.length
   })
 
   // Calcular totais da caixa
@@ -648,6 +763,37 @@ function Barbeiro() {
                 <CaixaValor>{agendamentosFuturos.length}</CaixaValor>
               </CaixaCard>
             </CaixaContainer>
+
+            {agendamentosProximos.length > 0 && (
+              <NotificacaoProximo>
+                <NotificacaoTexto>
+                  <NotificacaoTitulo>🔔 Lembrete: Agendamento próximo!</NotificacaoTitulo>
+                  {agendamentosProximos.length === 1 ? (
+                    <>
+                      {agendamentosProximos[0].nome} tem agendamento às {agendamentosProximos[0].horario} 
+                      (em aproximadamente 30 minutos)
+                    </>
+                  ) : (
+                    <>
+                      {agendamentosProximos.length} clientes têm agendamento em aproximadamente 30 minutos
+                    </>
+                  )}
+                </NotificacaoTexto>
+                {agendamentosProximos.length === 1 ? (
+                  <LembreteButton onClick={() => enviarLembreteWhatsApp(agendamentosProximos[0])}>
+                    📱 Enviar Lembrete
+                  </LembreteButton>
+                ) : (
+                  <LembreteButton onClick={() => {
+                    agendamentosProximos.forEach((ag, idx) => {
+                      setTimeout(() => enviarLembreteWhatsApp(ag), idx * 500)
+                    })
+                  }}>
+                    📱 Enviar Todos
+                  </LembreteButton>
+                )}
+              </NotificacaoProximo>
+            )}
 
             <AgendamentosHeader>
               <AgendamentosTitle>Agendamentos Pendentes</AgendamentosTitle>
