@@ -686,58 +686,69 @@ function Barbeiro() {
                 Verifique o console (F12) para ver os filtros aplicados.
               </EmptyState>
             ) : (
-              <AgendamentosList>
-                {Object.entries(organizarAgendamentosPorData(agendamentosFuturos)).length > 0 ? (
-                  Object.entries(organizarAgendamentosPorData(agendamentosFuturos)).map(([data, ags]) => {
-                    console.log('📅 Renderizando grupo para data:', data, 'com', ags.length, 'agendamentos')
-                    return (
-                      <AgendamentoGroup key={data}>
-                        <AgendamentoGroupDate>
-                          📆 {formatarDataCompleta(data)}
-                        </AgendamentoGroupDate>
-                        {ags.map((ag) => {
-                          const servicoInfo = servicos.find((s) => s.id === ag.servico)
-                          if (!servicoInfo) {
-                            console.warn('⚠️ Serviço não encontrado para:', ag.servico, ag)
-                          }
-                          return (
-                            <AgendamentoCard key={ag.id || `ag-${ag.nome}-${ag.data}-${ag.horario}`}>
-                              <AgendamentoCardContent>
-                                <AgendamentoInfo>
-                                  <AgendamentoNome>👤 {ag.nome}</AgendamentoNome>
-                                  <AgendamentoDetalhes>
-                                    <AgendamentoServico>
-                                      {servicoInfo?.icone || '✂️'} {servicoInfo?.nome || ag.servico}
-                                    </AgendamentoServico>
-                                    <span>📱 {ag.telefone}</span>
-                                    <span>💰 R$ {servicoInfo?.preco ? servicoInfo.preco.toFixed(2).replace('.', ',') : '0,00'}</span>
-                                  </AgendamentoDetalhes>
-                                </AgendamentoInfo>
-                                <AgendamentoActions>
-                                  <AgendamentoHorario>
-                                    🕐 {ag.horario}
-                                  </AgendamentoHorario>
-                                  <FinalizarButton
-                                    finalizado={ag.finalizado}
-                                    onClick={() => !ag.finalizado && ag.id && handleFinalizar(ag.id)}
-                                    disabled={ag.finalizado}
-                                  >
-                                    {ag.finalizado ? '✓ Feito' : '✓ Finalizar'}
-                                  </FinalizarButton>
-                                </AgendamentoActions>
-                              </AgendamentoCardContent>
-                            </AgendamentoCard>
-                          )
-                        })}
-                      </AgendamentoGroup>
-                    )
-                  })
-                ) : (
-                  <EmptyState>
-                    ⚠️ Erro ao organizar agendamentos. Verifique o console (F12).
-                  </EmptyState>
-                )}
-              </AgendamentosList>
+              (() => {
+                const agendamentosAgrupados = organizarAgendamentosPorData(agendamentosFuturos)
+                const grupos = Object.entries(agendamentosAgrupados)
+                console.log('🎨 Renderizando:', grupos.length, 'grupos de agendamentos')
+                
+                if (grupos.length === 0) {
+                  return (
+                    <EmptyState>
+                      ⚠️ Nenhum grupo de agendamentos criado. Verifique o console (F12).
+                    </EmptyState>
+                  )
+                }
+                
+                return (
+                  <AgendamentosList>
+                    {grupos.map(([data, ags]) => {
+                      console.log('📅 Renderizando grupo para data:', data, 'com', ags.length, 'agendamentos', ags)
+                      return (
+                        <AgendamentoGroup key={data}>
+                          <AgendamentoGroupDate>
+                            📆 {formatarDataCompleta(data)}
+                          </AgendamentoGroupDate>
+                          {ags.map((ag) => {
+                            const servicoInfo = servicos.find((s) => s.id === ag.servico)
+                            if (!servicoInfo) {
+                              console.warn('⚠️ Serviço não encontrado para:', ag.servico, ag)
+                            }
+                            console.log('🎯 Renderizando card:', ag.nome, ag.data, ag.horario)
+                            return (
+                              <AgendamentoCard key={ag.id || `ag-${ag.nome}-${ag.data}-${ag.horario}`}>
+                                <AgendamentoCardContent>
+                                  <AgendamentoInfo>
+                                    <AgendamentoNome>👤 {ag.nome}</AgendamentoNome>
+                                    <AgendamentoDetalhes>
+                                      <AgendamentoServico>
+                                        {servicoInfo?.icone || '✂️'} {servicoInfo?.nome || ag.servico}
+                                      </AgendamentoServico>
+                                      <span>📱 {ag.telefone}</span>
+                                      <span>💰 R$ {servicoInfo?.preco ? servicoInfo.preco.toFixed(2).replace('.', ',') : '0,00'}</span>
+                                    </AgendamentoDetalhes>
+                                  </AgendamentoInfo>
+                                  <AgendamentoActions>
+                                    <AgendamentoHorario>
+                                      🕐 {ag.horario}
+                                    </AgendamentoHorario>
+                                    <FinalizarButton
+                                      finalizado={ag.finalizado}
+                                      onClick={() => !ag.finalizado && ag.id && handleFinalizar(ag.id)}
+                                      disabled={ag.finalizado}
+                                    >
+                                      {ag.finalizado ? '✓ Feito' : '✓ Finalizar'}
+                                    </FinalizarButton>
+                                  </AgendamentoActions>
+                                </AgendamentoCardContent>
+                              </AgendamentoCard>
+                            )
+                          })}
+                        </AgendamentoGroup>
+                      )
+                    })}
+                  </AgendamentosList>
+                )
+              })()
             )}
           </AgendamentosSection>
         </Shell>
