@@ -582,20 +582,19 @@ const organizarAgendamentosPorData = (agendamentos: Agendamento[]) => {
 
 function Barbeiro() {
   const [agendamentos, setAgendamentos] = useState<Agendamento[]>([])
+  const [erro, setErro] = useState<string | null>(null)
 
   useEffect(() => {
     const carregarAgendamentos = async () => {
       try {
+        setErro(null)
         const { buscarAgendamentos } = await import('./agendamentosService')
         const ags = await buscarAgendamentos()
         console.log('📋 Total de agendamentos carregados:', ags.length)
-        console.log('📋 Todos os agendamentos:', ags)
-        if (ags.length > 0) {
-          console.log('📋 Primeiro agendamento completo:', JSON.stringify(ags[0], null, 2))
-        }
-        setAgendamentos(ags)
+        setAgendamentos(ags || [])
       } catch (e) {
         console.error('❌ Erro ao carregar agendamentos:', e)
+        setErro('Erro ao carregar agendamentos. Tente recarregar a página.')
       }
     }
 
@@ -616,9 +615,8 @@ function Barbeiro() {
     }
   }, [])
 
-  const agendamentosFuturos = agendamentos.filter(ag => {
-    if (!ag.data) {
-      console.warn('⚠️ Agendamento sem data:', ag)
+  const agendamentosFuturos = (agendamentos || []).filter(ag => {
+    if (!ag || !ag.data) {
       return false
     }
     try {
@@ -636,19 +634,6 @@ function Barbeiro() {
       const naoFinalizado = !finalizado
       const resultado = isFuturo && naoFinalizado
       
-      console.log('🔍 Filtro agendamento:', {
-        id: ag.id,
-        nome: ag.nome,
-        data: ag.data,
-        dataAgendamento: dataAgendamento.toISOString().split('T')[0],
-        hoje: hoje.toISOString().split('T')[0],
-        isFuturo,
-        finalizado: ag.finalizado,
-        finalizadoProcessado: finalizado,
-        naoFinalizado,
-        resultado
-      })
-      
       return resultado
     } catch (error) {
       console.error('❌ Erro ao processar data do agendamento:', ag, error)
@@ -656,14 +641,16 @@ function Barbeiro() {
     }
   })
 
-  const agendamentosFinalizados = agendamentos.filter(ag => ag.finalizado === true)
+  const agendamentosFinalizados = (agendamentos || []).filter(ag => ag && (ag.finalizado === true || String(ag.finalizado) === 'true'))
   
   // Verificar agendamentos próximos (30 minutos antes)
-  const agendamentosProximos = agendamentosFuturos.filter(ag => {
+  const agendamentosProximos = (agendamentosFuturos || []).filter(ag => {
     try {
-      if (!ag.data || !ag.horario) return false
+      if (!ag || !ag.data || !ag.horario) return false
       
       const [hora, minuto] = ag.horario.split(':').map(Number)
+      if (isNaN(hora) || isNaN(minuto)) return false
+      
       const dataAgendamento = new Date(ag.data)
       dataAgendamento.setHours(hora, minuto, 0, 0)
       
@@ -673,23 +660,39 @@ function Barbeiro() {
       // Entre 30 e 35 minutos antes (janela de 5 minutos para enviar)
       return diferencaMinutos >= 25 && diferencaMinutos <= 35
     } catch (error) {
+      console.error('Erro ao verificar agendamento próximo:', ag, error)
       return false
     }
   })
   
   // Função para enviar lembrete via WhatsApp
   const enviarLembreteWhatsApp = (ag: Agendamento) => {
-    const servicoInfo = servicos.find(s => s.id === ag.servico as ServicoId)
-    const mensagem = `Olá ${ag.nome}! 👋\n\n` +
-      `Este é um lembrete do seu agendamento:\n\n` +
-      `📅 *Data:* ${formatarDataCompleta(ag.data)}\n` +
-      `🕐 *Horário:* ${ag.horario}\n` +
-      `✂️ *Serviço:* ${servicoInfo?.nome || ag.servico}\n\n` +
-      `Nos vemos em breve! 😊`
-    
-    const telefoneLimpo = ag.telefone.replace(/\D/g, '')
-    const urlWhatsApp = `https://wa.me/55${telefoneLimpo}?text=${encodeURIComponent(mensagem)}`
-    window.open(urlWhatsApp, '_blank')
+    try {
+      if (!ag || !ag.nome || !ag.telefone || !ag.data || !ag.horario) {
+        alert('Dados do agendamento incompletos')
+        return
+      }
+      
+      const servicoInfo = servicos.find(s => s.id === ag.servico as ServicoId)
+      const mensagem = `Olá ${ag.nome}! 👋\n\n` +
+        `Este é um lembrete do seu agendamento:\n\n` +
+        `📅 *Data:* ${formatarDataCompleta(ag.data)}\n` +
+        `🕐 *Horário:* ${ag.horario}\n` +
+        `✂️ *Serviço:* ${servicoInfo?.nome || ag.servico || 'Serviço'}\n\n` +
+        `Nos vemos em breve! 😊`
+      
+      const telefoneLimpo = (ag.telefone || '').replace(/\D/g, '')
+      if (telefoneLimpo.length < 10) {
+        alert('Telefone inválido')
+        return
+      }
+      
+      const urlWhatsApp = `https://wa.me/55${telefoneLimpo}?text=${encodeURIComponent(mensagem)}`
+      window.open(urlWhatsApp, '_blank')
+    } catch (error) {
+      console.error('Erro ao enviar lembrete:', error)
+      alert('Erro ao abrir WhatsApp. Tente novamente.')
+    }
   }
   
   console.log('📊 Resumo:', {
@@ -701,19 +704,29 @@ function Barbeiro() {
 
   // Calcular totais da caixa
   const calcularTotal = () => {
-    return agendamentosFinalizados.reduce((total, ag) => {
-      const servicoInfo = servicos.find(s => s.id === (ag.servico as ServicoId))
-      // Usar preço do serviço ou tentar extrair do preço salvo
-      if (servicoInfo?.preco) {
-        return total + servicoInfo.preco
-      }
-      // Se não tiver preço no serviço, tentar extrair do preço salvo
-      if (ag.preco) {
-        const precoNum = parseFloat(ag.preco.replace('R$', '').replace(',', '.').trim())
-        return total + (isNaN(precoNum) ? 0 : precoNum)
-      }
-      return total
-    }, 0)
+    try {
+      return agendamentosFinalizados.reduce((total, ag) => {
+        try {
+          const servicoInfo = servicos.find(s => s.id === (ag.servico as ServicoId))
+          // Usar preço do serviço ou tentar extrair do preço salvo
+          if (servicoInfo?.preco) {
+            return total + servicoInfo.preco
+          }
+          // Se não tiver preço no serviço, tentar extrair do preço salvo
+          if (ag.preco) {
+            const precoNum = parseFloat(ag.preco.replace('R$', '').replace(',', '.').trim())
+            return total + (isNaN(precoNum) ? 0 : precoNum)
+          }
+          return total
+        } catch (error) {
+          console.error('Erro ao calcular preço do agendamento:', ag, error)
+          return total
+        }
+      }, 0)
+    } catch (error) {
+      console.error('Erro ao calcular total:', error)
+      return 0
+    }
   }
 
   const totalCaixa = calcularTotal()
@@ -747,6 +760,45 @@ function Barbeiro() {
         alert('❌ Erro ao resetar caixa. Tente novamente.')
       }
     }
+  }
+
+  // Se houver erro, mostrar mensagem
+  if (erro) {
+    return (
+      <>
+        <GlobalStyle />
+        <Page>
+          <Shell>
+            <Header>
+              <LogoText>
+                <BrandName>Barber Loss</BrandName>
+                <BrandSubtitle>Painel do Barbeiro</BrandSubtitle>
+              </LogoText>
+            </Header>
+            <EmptyState>
+              ❌ {erro}
+              <br />
+              <br />
+              <button 
+                onClick={() => window.location.reload()} 
+                style={{
+                  padding: '12px 24px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  background: '#fbbf24',
+                  color: '#052e16',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  marginTop: '16px'
+                }}
+              >
+                Recarregar Página
+              </button>
+            </EmptyState>
+          </Shell>
+        </Page>
+      </>
+    )
   }
 
   return (
