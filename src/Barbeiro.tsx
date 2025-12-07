@@ -481,7 +481,11 @@ function Barbeiro() {
       try {
         const { buscarAgendamentos } = await import('./agendamentosService')
         const ags = await buscarAgendamentos()
-        console.log('📋 Agendamentos carregados no painel:', ags.length, ags)
+        console.log('📋 Total de agendamentos carregados:', ags.length)
+        console.log('📋 Todos os agendamentos:', ags)
+        if (ags.length > 0) {
+          console.log('📋 Primeiro agendamento completo:', JSON.stringify(ags[0], null, 2))
+        }
         setAgendamentos(ags)
       } catch (e) {
         console.error('❌ Erro ao carregar agendamentos:', e)
@@ -497,13 +501,44 @@ function Barbeiro() {
   }, [])
 
   const agendamentosFuturos = agendamentos.filter(ag => {
-    const dataAgendamento = new Date(ag.data)
-    const hoje = new Date()
-    hoje.setHours(0, 0, 0, 0)
-    return dataAgendamento >= hoje && !ag.finalizado
+    if (!ag.data) {
+      console.warn('⚠️ Agendamento sem data:', ag)
+      return false
+    }
+    try {
+      const dataAgendamento = new Date(ag.data + 'T00:00:00')
+      const hoje = new Date()
+      hoje.setHours(0, 0, 0, 0)
+      dataAgendamento.setHours(0, 0, 0, 0)
+      const isFuturo = dataAgendamento >= hoje
+      const naoFinalizado = !ag.finalizado
+      const resultado = isFuturo && naoFinalizado
+      
+      console.log('🔍 Filtro agendamento:', {
+        nome: ag.nome,
+        data: ag.data,
+        dataAgendamento: dataAgendamento.toISOString().split('T')[0],
+        hoje: hoje.toISOString().split('T')[0],
+        isFuturo,
+        finalizado: ag.finalizado,
+        naoFinalizado,
+        resultado
+      })
+      
+      return resultado
+    } catch (error) {
+      console.error('❌ Erro ao processar data do agendamento:', ag, error)
+      return false
+    }
   })
 
   const agendamentosFinalizados = agendamentos.filter(ag => ag.finalizado === true)
+  
+  console.log('📊 Resumo:', {
+    total: agendamentos.length,
+    futuros: agendamentosFuturos.length,
+    finalizados: agendamentosFinalizados.length
+  })
 
   // Calcular totais da caixa
   const calcularTotal = () => {
