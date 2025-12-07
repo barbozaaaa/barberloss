@@ -261,10 +261,10 @@ const SectionSubtitle = styled.p`
 const ServicesCarousel = styled.div`
   position: relative;
   overflow: hidden;
-  padding: 0 35px;
+  padding: 0;
 
   @media (max-width: 480px) {
-    padding: 0 30px;
+    padding: 0;
   }
 `
 
@@ -1073,6 +1073,23 @@ function App() {
     setForm((prev) => ({ ...prev, servico: id }))
   }
 
+  const handleSelectHorario = (hora: string) => {
+    // Clear previous selection immediately and set new one
+    setForm((prev) => {
+      // If clicking the same hour, deselect it
+      if (prev.horario === hora) {
+        return { ...prev, horario: '' }
+      }
+      // Otherwise, select the new hour
+      return { ...prev, horario: hora }
+    })
+  }
+
+  const handleTrocarData = () => {
+    setForm((prev) => ({ ...prev, horario: '' }))
+    setEtapaHorario('data')
+  }
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
@@ -1197,17 +1214,6 @@ function App() {
                 </SectionTitleRow>
 
                 <ServicesCarousel>
-                  <CarouselButtonLeft
-                    type="button"
-                    onClick={() => {
-                      const grid = document.getElementById('servicos-grid')
-                      if (grid) {
-                        grid.scrollBy({ left: -300, behavior: 'smooth' })
-                      }
-                    }}
-                  >
-                    ‹
-                  </CarouselButtonLeft>
                   <ServicesGrid id="servicos-grid">
                     {servicos.map((servico) => (
                       <ServiceCardWrapper key={servico.id}>
@@ -1232,17 +1238,6 @@ function App() {
                       </ServiceCardWrapper>
                     ))}
                   </ServicesGrid>
-                  <CarouselButtonRight
-                    type="button"
-                    onClick={() => {
-                      const grid = document.getElementById('servicos-grid')
-                      if (grid) {
-                        grid.scrollBy({ left: 300, behavior: 'smooth' })
-                      }
-                    }}
-                  >
-                    ›
-                  </CarouselButtonRight>
                 </ServicesCarousel>
               </ServicesSection>
             </Hero>
@@ -1280,7 +1275,7 @@ function App() {
                     {etapaHorario === 'data' ? (
                       <StepHint>Clique em uma data para continuar</StepHint>
                     ) : (
-                      <StepBackButton type="button" onClick={() => setEtapaHorario('data')}>
+                      <StepBackButton type="button" onClick={handleTrocarData}>
                         Trocar data
                       </StepBackButton>
                     )}
@@ -1353,9 +1348,11 @@ function App() {
                             key={hora}
                             type="button"
                             active={form.horario === hora}
-                            onClick={() =>
-                              setForm((prev) => ({ ...prev, horario: hora }))
-                            }
+                            onClick={(e) => {
+                              e.preventDefault()
+                              e.stopPropagation()
+                              handleSelectHorario(hora)
+                            }}
                           >
                             {hora}
                           </TimeCard>
