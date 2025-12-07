@@ -558,7 +558,8 @@ function Barbeiro() {
   console.log('📊 Resumo:', {
     total: agendamentos.length,
     futuros: agendamentosFuturos.length,
-    finalizados: agendamentosFinalizados.length
+    finalizados: agendamentosFinalizados.length,
+    agendamentosFuturos: agendamentosFuturos
   })
 
   // Calcular totais da caixa
@@ -655,35 +656,9 @@ function Barbeiro() {
               </AgendamentosCount>
             </AgendamentosHeader>
 
-            {agendamentos.length === 0 ? (
+            {agendamentosFuturos.length === 0 ? (
               <EmptyState>
-                📅 Nenhum agendamento encontrado.<br />
-                <br />
-                <strong>Debug:</strong><br />
-                - Verifique o console do navegador (F12) para ver os logs<br />
-                - Se estiver usando Firebase, verifique as regras do Firestore<br />
-                - Se estiver usando localStorage, os dados são locais ao navegador<br />
-                <br />
-                <strong>Teste:</strong> Faça um novo agendamento e aguarde alguns segundos.
-              </EmptyState>
-            ) : agendamentosFuturos.length === 0 ? (
-              <EmptyState>
-                📅 Nenhum agendamento futuro no momento.<br />
-                <br />
-                <strong>Debug:</strong><br />
-                Total de agendamentos carregados: {agendamentos.length}<br />
-                Finalizados: {agendamentosFinalizados.length}<br />
-                <br />
-                <strong>Últimos agendamentos (primeiros 3):</strong><br />
-                {agendamentos.slice(0, 3).map((ag, idx) => (
-                  <div key={idx} style={{ marginTop: '8px', fontSize: '11px', textAlign: 'left' }}>
-                    {idx + 1}. {ag.nome} - {ag.data} {ag.horario} 
-                    {ag.finalizado ? ' (Finalizado)' : ''}
-                    {!ag.data ? ' ⚠️ Sem data' : ''}
-                  </div>
-                ))}<br />
-                <br />
-                Verifique o console (F12) para ver os filtros aplicados.
+                📅 Nenhum agendamento agendado no momento.
               </EmptyState>
             ) : (
               (() => {
