@@ -506,21 +506,29 @@ function Barbeiro() {
       return false
     }
     try {
+      // Garantir que finalizado seja boolean
+      const finalizado = ag.finalizado === true || String(ag.finalizado) === 'true'
+      
+      // Processar data
       const dataAgendamento = new Date(ag.data + 'T00:00:00')
       const hoje = new Date()
       hoje.setHours(0, 0, 0, 0)
       dataAgendamento.setHours(0, 0, 0, 0)
+      
+      // Permitir agendamentos de hoje ou futuros
       const isFuturo = dataAgendamento >= hoje
-      const naoFinalizado = !ag.finalizado
+      const naoFinalizado = !finalizado
       const resultado = isFuturo && naoFinalizado
       
       console.log('🔍 Filtro agendamento:', {
+        id: ag.id,
         nome: ag.nome,
         data: ag.data,
         dataAgendamento: dataAgendamento.toISOString().split('T')[0],
         hoje: hoje.toISOString().split('T')[0],
         isFuturo,
         finalizado: ag.finalizado,
+        finalizadoProcessado: finalizado,
         naoFinalizado,
         resultado
       })
@@ -641,17 +649,28 @@ function Barbeiro() {
                 <strong>Debug:</strong><br />
                 - Verifique o console do navegador (F12) para ver os logs<br />
                 - Se estiver usando Firebase, verifique as regras do Firestore<br />
-                - Se estiver usando localStorage, os dados são locais ao navegador
+                - Se estiver usando localStorage, os dados são locais ao navegador<br />
+                <br />
+                <strong>Teste:</strong> Faça um novo agendamento e aguarde alguns segundos.
               </EmptyState>
             ) : agendamentosFuturos.length === 0 ? (
               <EmptyState>
                 📅 Nenhum agendamento futuro no momento.<br />
                 <br />
                 <strong>Debug:</strong><br />
-                Total de agendamentos: {agendamentos.length}<br />
+                Total de agendamentos carregados: {agendamentos.length}<br />
                 Finalizados: {agendamentosFinalizados.length}<br />
                 <br />
-                Verifique o console (F12) para mais detalhes.
+                <strong>Últimos agendamentos (primeiros 3):</strong><br />
+                {agendamentos.slice(0, 3).map((ag, idx) => (
+                  <div key={idx} style={{ marginTop: '8px', fontSize: '11px', textAlign: 'left' }}>
+                    {idx + 1}. {ag.nome} - {ag.data} {ag.horario} 
+                    {ag.finalizado ? ' (Finalizado)' : ''}
+                    {!ag.data ? ' ⚠️ Sem data' : ''}
+                  </div>
+                ))}<br />
+                <br />
+                Verifique o console (F12) para ver os filtros aplicados.
               </EmptyState>
             ) : (
               <AgendamentosList>

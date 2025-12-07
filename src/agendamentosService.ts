@@ -95,6 +95,9 @@ export const buscarAgendamentos = async (): Promise<Agendamento[]> => {
       
       querySnapshot.forEach((doc) => {
         const data = doc.data()
+        // Garantir que finalizado seja boolean
+        const finalizado = data.finalizado === true || data.finalizado === 'true' || false
+        
         agendamentos.push({
           id: doc.id,
           nome: data.nome || '',
@@ -103,8 +106,17 @@ export const buscarAgendamentos = async (): Promise<Agendamento[]> => {
           horario: data.horario || '',
           servico: data.servico || '',
           dataCriacao: data.dataCriacao?.toDate?.()?.toISOString() || new Date().toISOString(),
-          finalizado: data.finalizado || false,
+          finalizado: finalizado,
           preco: data.preco || '',
+        })
+        
+        console.log('📝 Agendamento processado do Firebase:', {
+          id: doc.id,
+          nome: data.nome,
+          data: data.data,
+          horario: data.horario,
+          finalizado: data.finalizado,
+          finalizadoProcessado: finalizado
         })
       })
       
