@@ -634,10 +634,24 @@ function Barbeiro() {
               </AgendamentosCount>
             </AgendamentosHeader>
 
-            {agendamentosFuturos.length === 0 ? (
+            {agendamentos.length === 0 ? (
+              <EmptyState>
+                📅 Nenhum agendamento encontrado.<br />
+                <br />
+                <strong>Debug:</strong><br />
+                - Verifique o console do navegador (F12) para ver os logs<br />
+                - Se estiver usando Firebase, verifique as regras do Firestore<br />
+                - Se estiver usando localStorage, os dados são locais ao navegador
+              </EmptyState>
+            ) : agendamentosFuturos.length === 0 ? (
               <EmptyState>
                 📅 Nenhum agendamento futuro no momento.<br />
-                Os agendamentos aparecerão aqui quando forem feitos pelos clientes.
+                <br />
+                <strong>Debug:</strong><br />
+                Total de agendamentos: {agendamentos.length}<br />
+                Finalizados: {agendamentosFinalizados.length}<br />
+                <br />
+                Verifique o console (F12) para mais detalhes.
               </EmptyState>
             ) : (
               <AgendamentosList>
