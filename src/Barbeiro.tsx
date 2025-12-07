@@ -451,25 +451,38 @@ const formatarDataCompleta = (iso: string) => {
 const organizarAgendamentosPorData = (agendamentos: Agendamento[]) => {
   const agrupados: { [key: string]: Agendamento[] } = {}
   
+  console.log('📦 Organizando agendamentos:', agendamentos.length, agendamentos)
+  
+  if (agendamentos.length === 0) {
+    console.warn('⚠️ Nenhum agendamento para organizar!')
+    return agrupados
+  }
+  
   agendamentos
-    .filter(ag => {
-      const dataAgendamento = new Date(ag.data)
-      const hoje = new Date()
-      hoje.setHours(0, 0, 0, 0)
-      return dataAgendamento >= hoje
-    })
     .sort((a, b) => {
-      const dataA = new Date(`${a.data}T${a.horario}`)
-      const dataB = new Date(`${b.data}T${b.horario}`)
-      return dataA.getTime() - dataB.getTime()
+      try {
+        if (!a.data || !b.data) return 0
+        const dataA = new Date(`${a.data}T${a.horario || '00:00'}`)
+        const dataB = new Date(`${b.data}T${b.horario || '00:00'}`)
+        return dataA.getTime() - dataB.getTime()
+      } catch (error) {
+        console.error('Erro ao ordenar:', a, b, error)
+        return 0
+      }
     })
     .forEach(ag => {
+      if (!ag.data) {
+        console.warn('⚠️ Agendamento sem data na organização:', ag)
+        return
+      }
       if (!agrupados[ag.data]) {
         agrupados[ag.data] = []
       }
       agrupados[ag.data].push(ag)
+      console.log('✅ Agendamento adicionado ao grupo:', ag.data, ag.nome)
     })
   
+  console.log('📦 Agendamentos agrupados:', Object.keys(agrupados).length, 'datas', agrupados)
   return agrupados
 }
 
@@ -674,44 +687,56 @@ function Barbeiro() {
               </EmptyState>
             ) : (
               <AgendamentosList>
-                {Object.entries(organizarAgendamentosPorData(agendamentosFuturos)).map(([data, ags]) => (
-                  <AgendamentoGroup key={data}>
-                    <AgendamentoGroupDate>
-                      📆 {formatarDataCompleta(data)}
-                    </AgendamentoGroupDate>
-                    {ags.map((ag) => {
-                      const servicoInfo = servicos.find((s) => s.id === ag.servico)
-                      return (
-                        <AgendamentoCard key={ag.id}>
-                          <AgendamentoCardContent>
-                            <AgendamentoInfo>
-                              <AgendamentoNome>👤 {ag.nome}</AgendamentoNome>
-                              <AgendamentoDetalhes>
-                                <AgendamentoServico>
-                                  {servicoInfo?.icone} {servicoInfo?.nome}
-                                </AgendamentoServico>
-                                <span>📱 {ag.telefone}</span>
-                                <span>💰 R$ {servicoInfo?.preco.toFixed(2).replace('.', ',')}</span>
-                              </AgendamentoDetalhes>
-                            </AgendamentoInfo>
-                            <AgendamentoActions>
-                              <AgendamentoHorario>
-                                🕐 {ag.horario}
-                              </AgendamentoHorario>
-                              <FinalizarButton
-                                finalizado={ag.finalizado}
-                                onClick={() => !ag.finalizado && ag.id && handleFinalizar(ag.id)}
-                                disabled={ag.finalizado}
-                              >
-                                {ag.finalizado ? '✓ Feito' : '✓ Finalizar'}
-                              </FinalizarButton>
-                            </AgendamentoActions>
-                          </AgendamentoCardContent>
-                        </AgendamentoCard>
-                      )
-                    })}
-                  </AgendamentoGroup>
-                ))}
+                {Object.entries(organizarAgendamentosPorData(agendamentosFuturos)).length > 0 ? (
+                  Object.entries(organizarAgendamentosPorData(agendamentosFuturos)).map(([data, ags]) => {
+                    console.log('📅 Renderizando grupo para data:', data, 'com', ags.length, 'agendamentos')
+                    return (
+                      <AgendamentoGroup key={data}>
+                        <AgendamentoGroupDate>
+                          📆 {formatarDataCompleta(data)}
+                        </AgendamentoGroupDate>
+                        {ags.map((ag) => {
+                          const servicoInfo = servicos.find((s) => s.id === ag.servico)
+                          if (!servicoInfo) {
+                            console.warn('⚠️ Serviço não encontrado para:', ag.servico, ag)
+                          }
+                          return (
+                            <AgendamentoCard key={ag.id || `ag-${ag.nome}-${ag.data}-${ag.horario}`}>
+                              <AgendamentoCardContent>
+                                <AgendamentoInfo>
+                                  <AgendamentoNome>👤 {ag.nome}</AgendamentoNome>
+                                  <AgendamentoDetalhes>
+                                    <AgendamentoServico>
+                                      {servicoInfo?.icone || '✂️'} {servicoInfo?.nome || ag.servico}
+                                    </AgendamentoServico>
+                                    <span>📱 {ag.telefone}</span>
+                                    <span>💰 R$ {servicoInfo?.preco ? servicoInfo.preco.toFixed(2).replace('.', ',') : '0,00'}</span>
+                                  </AgendamentoDetalhes>
+                                </AgendamentoInfo>
+                                <AgendamentoActions>
+                                  <AgendamentoHorario>
+                                    🕐 {ag.horario}
+                                  </AgendamentoHorario>
+                                  <FinalizarButton
+                                    finalizado={ag.finalizado}
+                                    onClick={() => !ag.finalizado && ag.id && handleFinalizar(ag.id)}
+                                    disabled={ag.finalizado}
+                                  >
+                                    {ag.finalizado ? '✓ Feito' : '✓ Finalizar'}
+                                  </FinalizarButton>
+                                </AgendamentoActions>
+                              </AgendamentoCardContent>
+                            </AgendamentoCard>
+                          )
+                        })}
+                      </AgendamentoGroup>
+                    )
+                  })
+                ) : (
+                  <EmptyState>
+                    ⚠️ Erro ao organizar agendamentos. Verifique o console (F12).
+                  </EmptyState>
+                )}
               </AgendamentosList>
             )}
           </AgendamentosSection>
