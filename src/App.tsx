@@ -492,11 +492,6 @@ const ServiceMetaRow = styled.div`
   margin-top: 4px;
 `
 
-const ServiceMeta = styled.span`
-  font-size: 11px;
-  color: #6b7280;
-`
-
 const ServicePrice = styled.span`
   font-size: 13px;
   font-weight: 500;
@@ -833,7 +828,7 @@ const ConfirmationBody = styled.span`
   color: #a5f3fc;
 `
 
-type ServicoId = 'corte' | 'progressiva' | 'hidratacao' | 'barba' | 'descoloracao' | 'corte_barba' | 'tintura' | 'alisamento' | 'luzes' | 'tratamento' | 'corte_infantil' | 'sobrancelha' | 'pintura_global' | 'pigmentacao_corte'
+type ServicoId = 'corte' | 'barba' | 'corte_barba' | 'luzes' | 'pintura_global' | 'pigmentacao_corte'
 
 interface AgendamentoForm {
   nome: string
@@ -848,7 +843,6 @@ const servicos: {
   nome: string
   tag: string
   descricao: string
-  duracao: string
   preco: string
   icone: string
   imagem: string
@@ -858,7 +852,6 @@ const servicos: {
     nome: 'Corte de cabelo premium',
     tag: 'Clássico + moderno',
     descricao: 'Máquina e tesoura com acabamento na navalha, alinhado ao seu estilo.',
-    duracao: '~45 min',
     preco: 'R$ 50',
     icone: '✂️',
     imagem:
@@ -870,46 +863,10 @@ const servicos: {
     tag: 'Navalha quente',
     descricao:
       'Barba modelada, toalha quente e finalização com massagem facial relaxante.',
-    duracao: '~30 min',
     preco: 'R$ 30',
     icone: '🧔',
     imagem:
       'https://images.pexels.com/photos/1813272/pexels-photo-1813272.jpeg?auto=compress&cs=tinysrgb&w=800',
-  },
-  {
-    id: 'progressiva',
-    nome: 'Progressiva masculina',
-    tag: 'Fio alinhado',
-    descricao: 'Redução de volume e frizz com produtos profissionais para cabelo masculino.',
-    duracao: '~1h30',
-    preco: 'R$ 120',
-    icone: '🔥',
-    imagem:
-      'https://images.pexels.com/photos/3998421/pexels-photo-3998421.jpeg?auto=compress&cs=tinysrgb&w=800',
-  },
-  {
-    id: 'hidratacao',
-    nome: 'Hidratação + spa capilar',
-    tag: 'Cuidado total',
-    descricao:
-      'Tratamento profundo com massagem no lavatório para devolver brilho e maciez.',
-    duracao: '~40 min',
-    preco: 'R$ 70',
-    icone: '💧',
-    imagem:
-      'https://images.pexels.com/photos/3738341/pexels-photo-3738341.jpeg?auto=compress&cs=tinysrgb&w=800',
-  },
-  {
-    id: 'descoloracao',
-    nome: 'Descoloração do cabelo',
-    tag: 'Novo visual',
-    descricao:
-      'Descoloração profissional com produtos de alta qualidade para um resultado uniforme e brilhante.',
-    duracao: '~2h',
-    preco: 'R$ 150',
-    icone: '✨',
-    imagem:
-      'https://images.pexels.com/photos/3998419/pexels-photo-3998419.jpeg?auto=compress&cs=tinysrgb&w=800',
   },
   {
     id: 'corte_barba',
@@ -917,23 +874,21 @@ const servicos: {
     tag: 'Combo completo',
     descricao:
       'Corte de cabelo premium com barba desenhada. O combo perfeito para um visual impecável.',
-    duracao: '~1h15',
     preco: 'R$ 60',
     icone: '💈',
     imagem:
       'https://images.pexels.com/photos/3998419/pexels-photo-3998419.jpeg?auto=compress&cs=tinysrgb&w=800',
   },
   {
-    id: 'tintura',
-    nome: 'Tintura masculina',
-    tag: 'Cor e estilo',
+    id: 'luzes',
+    nome: 'Corte com luzes (platinado)',
+    tag: 'Destaque',
     descricao:
-      'Coloração profissional com produtos específicos para cabelo masculino. Cobertura de fios brancos.',
-    duracao: '~1h30',
-    preco: 'R$ 90',
-    icone: '🎨',
+      'Corte de cabelo premium com aplicação de luzes platinadas para dar destaque e movimento ao cabelo.',
+    preco: 'R$ 100',
+    icone: '⭐',
     imagem:
-      'https://images.pexels.com/photos/3998421/pexels-photo-3998421.jpeg?auto=compress&cs=tinysrgb&w=800',
+      'https://images.pexels.com/photos/3998419/pexels-photo-3998419.jpeg?auto=compress&cs=tinysrgb&w=800',
   },
   {
     id: 'pintura_global',
@@ -941,7 +896,6 @@ const servicos: {
     tag: 'Transformação',
     descricao:
       'Corte de cabelo premium com pintura global platinada para um visual moderno e impactante.',
-    duracao: '~2h30',
     preco: 'R$ 120',
     icone: '✨',
     imagem:
@@ -953,71 +907,10 @@ const servicos: {
     tag: 'Cor + corte',
     descricao:
       'Corte de cabelo premium com pigmentação profissional para realçar seu visual.',
-    duracao: '~1h30',
     preco: 'R$ 70',
     icone: '🎨',
     imagem:
       'https://images.pexels.com/photos/3998421/pexels-photo-3998421.jpeg?auto=compress&cs=tinysrgb&w=800',
-  },
-  {
-    id: 'alisamento',
-    nome: 'Alisamento masculino',
-    tag: 'Fio liso',
-    descricao:
-      'Alisamento profissional para cabelos masculinos com produtos de alta qualidade e durabilidade.',
-    duracao: '~2h',
-    preco: 'R$ 130',
-    icone: '🌊',
-    imagem:
-      'https://images.pexels.com/photos/3998421/pexels-photo-3998421.jpeg?auto=compress&cs=tinysrgb&w=800',
-  },
-  {
-    id: 'luzes',
-    nome: 'Corte com luzes (platinado)',
-    tag: 'Destaque',
-    descricao:
-      'Corte de cabelo premium com aplicação de luzes platinadas para dar destaque e movimento ao cabelo.',
-    duracao: '~2h30',
-    preco: 'R$ 100',
-    icone: '⭐',
-    imagem:
-      'https://images.pexels.com/photos/3998419/pexels-photo-3998419.jpeg?auto=compress&cs=tinysrgb&w=800',
-  },
-  {
-    id: 'tratamento',
-    nome: 'Tratamento capilar',
-    tag: 'Reparação',
-    descricao:
-      'Tratamento reparador para cabelos danificados, com produtos específicos para cada tipo de necessidade.',
-    duracao: '~50 min',
-    preco: 'R$ 80',
-    icone: '💆',
-    imagem:
-      'https://images.pexels.com/photos/3738341/pexels-photo-3738341.jpeg?auto=compress&cs=tinysrgb&w=800',
-  },
-  {
-    id: 'corte_infantil',
-    nome: 'Corte infantil',
-    tag: 'Kids',
-    descricao:
-      'Corte especializado para crianças, com ambiente descontraído e profissionais experientes.',
-    duracao: '~30 min',
-    preco: 'R$ 35',
-    icone: '👶',
-    imagem:
-      'https://images.pexels.com/photos/3998419/pexels-photo-3998419.jpeg?auto=compress&cs=tinysrgb&w=800',
-  },
-  {
-    id: 'sobrancelha',
-    nome: 'Design de sobrancelha',
-    tag: 'Ajuste fino',
-    descricao:
-      'Design e modelagem de sobrancelhas masculinas para um visual mais definido e harmonioso.',
-    duracao: '~20 min',
-    preco: 'R$ 25',
-    icone: '👁️',
-    imagem:
-      'https://images.pexels.com/photos/1813272/pexels-photo-1813272.jpeg?auto=compress&cs=tinysrgb&w=800',
   },
 ]
 
@@ -1222,7 +1115,7 @@ function App() {
                   <GradientAccent>no horário certo.</GradientAccent>
                 </HeroTitle>
                 <HeroDescription>
-                  Agende corte, progressiva, hidratação ou barba em poucos cliques.
+                  Agende seu corte ou barba em poucos cliques.
                   Atendimento pontual, ambiente climatizado e aquele papo de barbeiro
                   que faz o tempo passar voando.
                 </HeroDescription>
@@ -1276,7 +1169,6 @@ function App() {
                             </ServiceTitleRow>
                             <ServiceDescription>{servico.descricao}</ServiceDescription>
                             <ServiceMetaRow>
-                              <ServiceMeta>{servico.duracao}</ServiceMeta>
                               <ServicePrice>{servico.preco}</ServicePrice>
                             </ServiceMetaRow>
                           </ServiceContent>

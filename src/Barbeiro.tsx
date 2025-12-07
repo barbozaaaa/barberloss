@@ -429,16 +429,8 @@ const servicos: {
 }[] = [
   { id: 'corte', nome: 'Corte de cabelo premium', icone: '✂️', preco: 50 },
   { id: 'barba', nome: 'Barba desenhada', icone: '🧔', preco: 30 },
-  { id: 'progressiva', nome: 'Progressiva masculina', icone: '🔥', preco: 120 },
-  { id: 'hidratacao', nome: 'Hidratação + spa capilar', icone: '💧', preco: 70 },
-  { id: 'descoloracao', nome: 'Descoloração do cabelo', icone: '✨', preco: 150 },
   { id: 'corte_barba', nome: 'Corte + Barba', icone: '💈', preco: 60 },
-  { id: 'tintura', nome: 'Tintura masculina', icone: '🎨', preco: 90 },
-  { id: 'alisamento', nome: 'Alisamento masculino', icone: '🌊', preco: 130 },
   { id: 'luzes', nome: 'Corte com luzes (platinado)', icone: '⭐', preco: 100 },
-  { id: 'tratamento', nome: 'Tratamento capilar', icone: '💆', preco: 80 },
-  { id: 'corte_infantil', nome: 'Corte infantil', icone: '👶', preco: 35 },
-  { id: 'sobrancelha', nome: 'Design de sobrancelha', icone: '👁️', preco: 25 },
   { id: 'pintura_global', nome: 'Corte com pintura global (platinado)', icone: '✨', preco: 120 },
   { id: 'pigmentacao_corte', nome: 'Pigmentação e Corte', icone: '🎨', preco: 70 },
 ]
