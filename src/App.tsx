@@ -833,7 +833,7 @@ const ConfirmationBody = styled.span`
   color: #a5f3fc;
 `
 
-type ServicoId = 'corte' | 'progressiva' | 'hidratacao' | 'barba' | 'descoloracao' | 'corte_barba' | 'tintura' | 'alisamento' | 'luzes' | 'tratamento' | 'corte_infantil' | 'sobrancelha'
+type ServicoId = 'corte' | 'progressiva' | 'hidratacao' | 'barba' | 'descoloracao' | 'corte_barba' | 'tintura' | 'alisamento' | 'luzes' | 'tratamento' | 'corte_infantil' | 'sobrancelha' | 'pintura_global' | 'pigmentacao_corte'
 
 interface AgendamentoForm {
   nome: string
@@ -859,7 +859,7 @@ const servicos: {
     tag: 'Clássico + moderno',
     descricao: 'Máquina e tesoura com acabamento na navalha, alinhado ao seu estilo.',
     duracao: '~45 min',
-    preco: 'R$ 55',
+    preco: 'R$ 50',
     icone: '✂️',
     imagem:
       'https://images.pexels.com/photos/3998419/pexels-photo-3998419.jpeg?auto=compress&cs=tinysrgb&w=800',
@@ -871,7 +871,7 @@ const servicos: {
     descricao:
       'Barba modelada, toalha quente e finalização com massagem facial relaxante.',
     duracao: '~30 min',
-    preco: 'R$ 40',
+    preco: 'R$ 30',
     icone: '🧔',
     imagem:
       'https://images.pexels.com/photos/1813272/pexels-photo-1813272.jpeg?auto=compress&cs=tinysrgb&w=800',
@@ -918,7 +918,7 @@ const servicos: {
     descricao:
       'Corte de cabelo premium com barba desenhada. O combo perfeito para um visual impecável.',
     duracao: '~1h15',
-    preco: 'R$ 85',
+    preco: 'R$ 60',
     icone: '💈',
     imagem:
       'https://images.pexels.com/photos/3998419/pexels-photo-3998419.jpeg?auto=compress&cs=tinysrgb&w=800',
@@ -931,6 +931,30 @@ const servicos: {
       'Coloração profissional com produtos específicos para cabelo masculino. Cobertura de fios brancos.',
     duracao: '~1h30',
     preco: 'R$ 90',
+    icone: '🎨',
+    imagem:
+      'https://images.pexels.com/photos/3998421/pexels-photo-3998421.jpeg?auto=compress&cs=tinysrgb&w=800',
+  },
+  {
+    id: 'pintura_global',
+    nome: 'Corte com pintura global (platinado)',
+    tag: 'Transformação',
+    descricao:
+      'Corte de cabelo premium com pintura global platinada para um visual moderno e impactante.',
+    duracao: '~2h30',
+    preco: 'R$ 120',
+    icone: '✨',
+    imagem:
+      'https://images.pexels.com/photos/3998419/pexels-photo-3998419.jpeg?auto=compress&cs=tinysrgb&w=800',
+  },
+  {
+    id: 'pigmentacao_corte',
+    nome: 'Pigmentação e Corte',
+    tag: 'Cor + corte',
+    descricao:
+      'Corte de cabelo premium com pigmentação profissional para realçar seu visual.',
+    duracao: '~1h30',
+    preco: 'R$ 70',
     icone: '🎨',
     imagem:
       'https://images.pexels.com/photos/3998421/pexels-photo-3998421.jpeg?auto=compress&cs=tinysrgb&w=800',
@@ -949,12 +973,12 @@ const servicos: {
   },
   {
     id: 'luzes',
-    nome: 'Luzes / Mechas',
+    nome: 'Corte com luzes (platinado)',
     tag: 'Destaque',
     descricao:
-      'Aplicação de luzes ou mechas para dar destaque e movimento ao cabelo com técnica profissional.',
+      'Corte de cabelo premium com aplicação de luzes platinadas para dar destaque e movimento ao cabelo.',
     duracao: '~2h30',
-    preco: 'R$ 180',
+    preco: 'R$ 100',
     icone: '⭐',
     imagem:
       'https://images.pexels.com/photos/3998419/pexels-photo-3998419.jpeg?auto=compress&cs=tinysrgb&w=800',
