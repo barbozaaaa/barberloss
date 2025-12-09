@@ -2,26 +2,29 @@
 
 ## Dimensões Recomendadas
 
-### Desktop (Telas grandes)
-- **Largura:** 1920px
-- **Altura:** 600px
-- **Proporção:** 16:5 (3.2:1)
+### Desktop (Telas grandes - 769px+)
+- **Largura:** 1920px (ou 1120px para o container máximo)
+- **Altura:** 450px a 600px (altura mínima: 450px, máxima: 600px)
+- **Proporção:** ~3.2:1 a 4:1
 - **Formato:** JPG ou WebP
 - **Tamanho máximo:** 500KB por imagem
+- **Recomendado:** 1920x600px ou 1120x450px
 
-### Tablet
+### Tablet (481px - 768px)
 - **Largura:** 1200px
-- **Altura:** 400px
-- **Proporção:** 3:1
+- **Altura:** 350px (altura mínima configurada)
+- **Proporção:** ~3.4:1
 - **Formato:** JPG ou WebP
 - **Tamanho máximo:** 300KB por imagem
+- **Recomendado:** 1200x350px
 
-### Mobile
+### Mobile (até 480px)
 - **Largura:** 800px
-- **Altura:** 400px
-- **Proporção:** 2:1
+- **Altura:** 250px (altura mínima configurada)
+- **Proporção:** 3.2:1
 - **Formato:** JPG ou WebP
 - **Tamanho máximo:** 200KB por imagem
+- **Recomendado:** 800x250px
 
 ## Como Adicionar Suas Imagens
 
@@ -49,13 +52,20 @@ const bannerImages = [
 - O carrossel muda automaticamente a cada 5 segundos
 - Os indicadores na parte inferior permitem navegação manual
 
-## Exemplo de Dimensões
+## Exemplo de Dimensões (Atuais)
 
 ```
-Desktop:  1920 x 600px
-Tablet:   1200 x 400px  
-Mobile:   800 x 400px
+Desktop:  1920 x 600px (ou 1120 x 450px)
+Tablet:   1200 x 350px  
+Mobile:   800 x 250px
 ```
+
+## Dimensões Configuradas no Código
+
+- **Mobile (≤480px):** min-height: 250px
+- **Tablet (481-768px):** min-height: 350px
+- **Desktop (≥769px):** min-height: 450px, max-height: 600px
+- **Largura:** Sempre 100% do container (responsivo)
 
 ## Ferramentas Recomendadas para Redimensionar
 
