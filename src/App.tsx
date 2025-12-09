@@ -991,21 +991,44 @@ function App() {
 
   // Check if date is November 23rd or 24th
   const isDataBloqueada = (dataISO: string) => {
-    if (!dataISO) return false
+    if (!dataISO || dataISO.length < 10) return false
     try {
+      // Formato esperado: YYYY-MM-DD
       const partes = dataISO.split('-')
-      if (partes.length !== 3) return false
+      if (partes.length !== 3) {
+        console.log('⚠️ Formato de data inválido:', dataISO)
+        return false
+      }
+      
       const ano = parseInt(partes[0], 10)
       const mes = parseInt(partes[1], 10)
       const dia = parseInt(partes[2], 10)
+      
+      // Validar se os valores são números válidos
+      if (isNaN(ano) || isNaN(mes) || isNaN(dia)) {
+        console.log('⚠️ Valores de data inválidos:', { ano, mes, dia })
+        return false
+      }
+      
       // Mês 11 = novembro no formato ISO (1-indexed, então 11 = novembro)
       // Verificar se é 23 ou 24 de novembro do ano atual
       const anoAtual = new Date().getFullYear()
       const resultado = (ano === anoAtual && mes === 11 && (dia === 23 || dia === 24))
-      console.log('🔍 Verificando data bloqueada:', { dataISO, ano, mes, dia, anoAtual, resultado })
+      
+      console.log('🔍 Verificando data bloqueada:', { 
+        dataISO, 
+        ano, 
+        mes, 
+        dia, 
+        anoAtual, 
+        isNovembro: mes === 11,
+        isDia23ou24: (dia === 23 || dia === 24),
+        resultado 
+      })
+      
       return resultado
     } catch (error) {
-      console.error('Erro ao verificar data bloqueada:', error)
+      console.error('❌ Erro ao verificar data bloqueada:', error, dataISO)
       return false
     }
   }
