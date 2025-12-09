@@ -998,21 +998,31 @@ function App() {
       const ano = parseInt(partes[0], 10)
       const mes = parseInt(partes[1], 10)
       const dia = parseInt(partes[2], 10)
-      // Mês 11 = novembro no formato ISO (1-indexed)
+      // Mês 11 = novembro no formato ISO (1-indexed, então 11 = novembro)
       // Verificar se é 23 ou 24 de novembro do ano atual
       const anoAtual = new Date().getFullYear()
-      return (ano === anoAtual && mes === 11 && (dia === 23 || dia === 24))
-    } catch {
+      const resultado = (ano === anoAtual && mes === 11 && (dia === 23 || dia === 24))
+      console.log('🔍 Verificando data bloqueada:', { dataISO, ano, mes, dia, anoAtual, resultado })
+      return resultado
+    } catch (error) {
+      console.error('Erro ao verificar data bloqueada:', error)
       return false
     }
   }
 
   // Get available times for selected date (exclude booked times and past times for today)
   const getHorariosDisponiveis = () => {
-    if (!form.data) return horariosPadrao
+    if (!form.data) {
+      console.log('📅 Sem data selecionada, retornando todos os horários')
+      return horariosPadrao
+    }
+    
+    console.log('📅 Data selecionada:', form.data)
     
     // Se for dia 23 ou 24 de novembro, retornar array vazio (todos ocupados)
-    if (isDataBloqueada(form.data)) {
+    const bloqueada = isDataBloqueada(form.data)
+    if (bloqueada) {
+      console.log('🚫 Data bloqueada (23 ou 24 de novembro), retornando array vazio')
       return []
     }
     
@@ -1034,14 +1044,18 @@ function App() {
     
     let horariosFiltrados = horariosPadrao.filter(hora => !horariosOcupados.includes(hora))
     
+    console.log('⏰ Horários disponíveis antes de filtrar passados:', horariosFiltrados.length)
+    
     // If it's today, filter out past times
     if (isHoje) {
       horariosFiltrados = horariosFiltrados.filter(hora => {
         // Compare time strings (HH:MM format)
         return hora > horaAtualFormatada
       })
+      console.log('⏰ Horários disponíveis após filtrar passados:', horariosFiltrados.length)
     }
     
+    console.log('✅ Retornando horários:', horariosFiltrados)
     return horariosFiltrados
   }
 
