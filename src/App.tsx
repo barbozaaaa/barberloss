@@ -100,19 +100,20 @@ const BannerTitle = styled.h2`
 `
 
 const BannerSubtitle = styled.p`
-  font-size: 20px;
-  font-weight: 500;
+  font-size: 22px;
+  font-weight: 600;
   color: #f9fafb;
   text-align: center;
   margin: 0;
   text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+  line-height: 1.4;
   
   @media (max-width: 768px) {
-    font-size: 16px;
+    font-size: 18px;
   }
   
   @media (max-width: 480px) {
-    font-size: 14px;
+    font-size: 15px;
   }
 `
 
@@ -1162,19 +1163,19 @@ const bannerImages = [
   {
     image: 'https://images.pexels.com/photos/3998419/pexels-photo-3998419.jpeg?auto=compress&cs=tinysrgb&w=1920&h=600&fit=crop',
     title: '🎄 Promoção de Natal',
-    subtitle: 'Cuidado especial para você brilhar nas festas!',
+    subtitle: 'Corte e Barba: R$ 70 → R$ 50 | Não perca esta oportunidade!',
     showOverlay: true,
   },
   {
     image: 'https://images.pexels.com/photos/1813272/pexels-photo-1813272.jpeg?auto=compress&cs=tinysrgb&w=1920&h=600&fit=crop',
-    title: '✨ Ofertas Especiais',
-    subtitle: 'Agende agora e garante seu melhor visual!',
+    title: '✨ Progressiva e Corte',
+    subtitle: 'De R$ 100 por apenas R$ 90 | Agende agora!',
     showOverlay: true,
   },
   {
     image: 'https://images.pexels.com/photos/3998421/pexels-photo-3998421.jpeg?auto=compress&cs=tinysrgb&w=1920&h=600&fit=crop',
-    title: '🎁 Descontos Imperdíveis',
-    subtitle: 'Presenteie-se com um visual incrível!',
+    title: '🎁 Ofertas Especiais',
+    subtitle: 'Corte e Barba R$ 50 | Progressiva e Corte R$ 90',
     showOverlay: true,
   },
 ]
