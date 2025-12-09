@@ -929,22 +929,12 @@ const formatarResumoData = (iso: string) => {
 
 const criarProximosDias = (quantidade: number) => {
   const hoje = new Date()
-  const anoAtual = hoje.getFullYear()
-  const dataLimite = new Date(anoAtual, 10, 24) // 24 de novembro (mês 10 = novembro, pois começa em 0)
-  
   const dias: Date[] = []
   for (let i = 0; i < quantidade; i++) {
     const data = new Date(hoje)
     data.setDate(hoje.getDate() + i)
-    
-    // Parar se passar do dia 24 de novembro
-    if (data > dataLimite) {
-      break
-    }
-    
     dias.push(data)
   }
-  
   return dias
 }
 
@@ -989,14 +979,13 @@ function App() {
     return () => clearInterval(interval)
   }, [])
 
-  // Check if date is November 23rd or 24th
+  // Check if date is December 23rd or 24th
   const isDataBloqueada = (dataISO: string) => {
     if (!dataISO || dataISO.length < 10) return false
     try {
       // Formato esperado: YYYY-MM-DD
       const partes = dataISO.split('-')
       if (partes.length !== 3) {
-        console.log('⚠️ Formato de data inválido:', dataISO)
         return false
       }
       
@@ -1006,25 +995,13 @@ function App() {
       
       // Validar se os valores são números válidos
       if (isNaN(ano) || isNaN(mes) || isNaN(dia)) {
-        console.log('⚠️ Valores de data inválidos:', { ano, mes, dia })
         return false
       }
       
-      // Mês 11 = novembro no formato ISO (1-indexed, então 11 = novembro)
-      // Verificar se é 23 ou 24 de novembro do ano atual
+      // Mês 12 = dezembro no formato ISO (1-indexed, então 12 = dezembro)
+      // Verificar se é 23 ou 24 de dezembro do ano atual
       const anoAtual = new Date().getFullYear()
-      const resultado = (ano === anoAtual && mes === 11 && (dia === 23 || dia === 24))
-      
-      console.log('🔍 Verificando data bloqueada:', { 
-        dataISO, 
-        ano, 
-        mes, 
-        dia, 
-        anoAtual, 
-        isNovembro: mes === 11,
-        isDia23ou24: (dia === 23 || dia === 24),
-        resultado 
-      })
+      const resultado = (ano === anoAtual && mes === 12 && (dia === 23 || dia === 24))
       
       return resultado
     } catch (error) {
