@@ -37,10 +37,14 @@ const BannerCarousel = styled.div`
   position: relative;
   width: 100%;
   overflow: hidden;
-  margin-bottom: 0;
+  margin-top: 24px;
+  margin-bottom: 32px;
+  border-radius: 16px;
   
   @media (max-width: 480px) {
-    margin-bottom: 0;
+    margin-top: 16px;
+    margin-bottom: 24px;
+    border-radius: 12px;
   }
 `
 
@@ -1311,31 +1315,6 @@ function App() {
     <>
       <GlobalStyle />
       <Page>
-        {bannerImages.length > 0 && (
-          <BannerCarousel>
-            {bannerImages.map((image, index) => (
-              <BannerSlide key={index} active={bannerIndex === index}>
-                <BannerImage 
-                  src={image} 
-                  alt={`Banner ${index + 1}`}
-                  loading={index === 0 ? 'eager' : 'lazy'}
-                />
-              </BannerSlide>
-            ))}
-            {bannerImages.length > 1 && (
-              <BannerIndicators>
-                {bannerImages.map((_, index) => (
-                  <BannerIndicator
-                    key={index}
-                    active={bannerIndex === index}
-                    onClick={() => setBannerIndex(index)}
-                    aria-label={`Ir para slide ${index + 1}`}
-                  />
-                ))}
-              </BannerIndicators>
-            )}
-          </BannerCarousel>
-        )}
         <Shell>
           <Header>
             <div></div>
@@ -1351,6 +1330,32 @@ function App() {
               <OutlineChip>Terça a sábado · 09h às 20h</OutlineChip>
             </HeaderActions>
           </Header>
+
+          {bannerImages.length > 0 && (
+            <BannerCarousel>
+              {bannerImages.map((image, index) => (
+                <BannerSlide key={index} active={bannerIndex === index}>
+                  <BannerImage 
+                    src={image} 
+                    alt={`Banner ${index + 1}`}
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                  />
+                </BannerSlide>
+              ))}
+              {bannerImages.length > 1 && (
+                <BannerIndicators>
+                  {bannerImages.map((_, index) => (
+                    <BannerIndicator
+                      key={index}
+                      active={bannerIndex === index}
+                      onClick={() => setBannerIndex(index)}
+                      aria-label={`Ir para slide ${index + 1}`}
+                    />
+                  ))}
+                </BannerIndicators>
+              )}
+            </BannerCarousel>
+          )}
 
           <Layout>
             <Hero>
