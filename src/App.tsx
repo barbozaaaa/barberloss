@@ -978,7 +978,7 @@ const servicos: {
   {
     id: 'corte',
     nome: 'Corte',
-    tag: 'Clássico + moderno',
+    tag: 'Clássico',
     descricao: 'Máquina e tesoura com acabamento na navalha, alinhado ao seu estilo.',
     preco: 'R$ 50',
     icone: '✂️',
