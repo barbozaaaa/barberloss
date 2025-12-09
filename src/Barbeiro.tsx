@@ -712,13 +712,21 @@ function Barbeiro() {
 
   useEffect(() => {
     // Carregar configuração do Google Calendar
-    const { getGoogleCalendarConfig, isGoogleCalendarConfigured } = await import('./googleCalendarService')
-    const config = getGoogleCalendarConfig()
-    if (config) {
-      setGoogleCalendarToken(config.accessToken)
-      setGoogleCalendarId(config.calendarId)
-      setGoogleCalendarConfigured(isGoogleCalendarConfigured())
+    const carregarConfigGoogleCalendar = async () => {
+      try {
+        const { getGoogleCalendarConfig, isGoogleCalendarConfigured } = await import('./googleCalendarService')
+        const config = getGoogleCalendarConfig()
+        if (config) {
+          setGoogleCalendarToken(config.accessToken)
+          setGoogleCalendarId(config.calendarId)
+          setGoogleCalendarConfigured(isGoogleCalendarConfigured())
+        }
+      } catch (error) {
+        console.error('Erro ao carregar configuração do Google Calendar:', error)
+      }
     }
+    
+    carregarConfigGoogleCalendar()
     
     const carregarAgendamentos = async () => {
       try {
