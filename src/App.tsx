@@ -929,11 +929,23 @@ const formatarResumoData = (iso: string) => {
 
 const criarProximosDias = (quantidade: number) => {
   const hoje = new Date()
-  return Array.from({ length: quantidade }, (_, index) => {
+  const anoAtual = hoje.getFullYear()
+  const dataLimite = new Date(anoAtual, 10, 24) // 24 de novembro (mês 10 = novembro, pois começa em 0)
+  
+  const dias: Date[] = []
+  for (let i = 0; i < quantidade; i++) {
     const data = new Date(hoje)
-    data.setDate(hoje.getDate() + index)
-    return data
-  })
+    data.setDate(hoje.getDate() + i)
+    
+    // Parar se passar do dia 24 de novembro
+    if (data > dataLimite) {
+      break
+    }
+    
+    dias.push(data)
+  }
+  
+  return dias
 }
 
 // Generate all hours from 9 AM to 8 PM (9:00 to 20:00)
@@ -977,9 +989,22 @@ function App() {
     return () => clearInterval(interval)
   }, [])
 
+  // Check if date is November 23rd or 24th
+  const isDataBloqueada = (dataISO: string) => {
+    if (!dataISO) return false
+    const [, mes, dia] = dataISO.split('-').map(Number)
+    // Mês 11 = novembro (0-indexed, então 10 = novembro)
+    return (mes === 11 && (dia === 23 || dia === 24))
+  }
+
   // Get available times for selected date (exclude booked times and past times for today)
   const getHorariosDisponiveis = () => {
     if (!form.data) return horariosPadrao
+    
+    // Se for dia 23 ou 24 de novembro, retornar array vazio (todos ocupados)
+    if (isDataBloqueada(form.data)) {
+      return []
+    }
     
     // Check if selected date is today
     const hoje = new Date()
@@ -1293,13 +1318,13 @@ function App() {
                       <CarouselButtonRight
                         type="button"
                         onClick={() => {
-                          const totalDias = 30
-                          const totalGrupos = Math.ceil(totalDias / 5)
+                          const diasDisponiveis = criarProximosDias(30)
+                          const totalGrupos = Math.ceil(diasDisponiveis.length / 5)
                           if (dataScrollIndex < totalGrupos - 1) {
                             setDataScrollIndex(dataScrollIndex + 1)
                           }
                         }}
-                        disabled={dataScrollIndex >= Math.ceil(30 / 5) - 1}
+                        disabled={dataScrollIndex >= Math.ceil(criarProximosDias(30).length / 5) - 1}
                       >
                         ›
                       </CarouselButtonRight>
@@ -1323,7 +1348,9 @@ function App() {
                         ))
                       ) : (
                         <div style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#9ca3af', padding: '20px', fontSize: '13px' }}>
-                          Todos os horários estão ocupados para esta data. Por favor, escolha outra data.
+                          {isDataBloqueada(form.data) 
+                            ? '❌ Esta data não possui horários disponíveis. Todos os horários já estão reservados.'
+                            : 'Todos os horários estão ocupados para esta data. Por favor, escolha outra data.'}
                         </div>
                       )}
                     </TimeGrid>
