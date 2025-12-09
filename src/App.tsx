@@ -56,6 +56,66 @@ const BannerSlide = styled.div<{ active: boolean }>`
   transition: opacity 0.6s ease-in-out;
 `
 
+const BannerOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.75) 0%,
+    rgba(220, 38, 38, 0.6) 50%,
+    rgba(15, 23, 42, 0.75) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 5;
+  
+  @media (max-width: 480px) {
+    padding: 16px;
+  }
+`
+
+const BannerTitle = styled.h2`
+  font-size: 42px;
+  font-weight: 800;
+  color: #fbbf24;
+  text-align: center;
+  margin: 0 0 12px 0;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+  letter-spacing: 0.05em;
+  
+  @media (max-width: 768px) {
+    font-size: 32px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+`
+
+const BannerSubtitle = styled.p`
+  font-size: 20px;
+  font-weight: 500;
+  color: #f9fafb;
+  text-align: center;
+  margin: 0;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+  
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 14px;
+  }
+`
+
 const BannerImage = styled.img`
   width: 100%;
   height: auto;
@@ -1099,9 +1159,24 @@ const horariosPadrao = Array.from({ length: 12 }, (_, i) => {
 // Dimensões recomendadas: 1920x600px (desktop) ou proporção 16:5
 // Formato: JPG ou WebP, máximo 500KB por imagem
 const bannerImages = [
-  'https://images.pexels.com/photos/3998419/pexels-photo-3998419.jpeg?auto=compress&cs=tinysrgb&w=1920&h=600&fit=crop',
-  'https://images.pexels.com/photos/1813272/pexels-photo-1813272.jpeg?auto=compress&cs=tinysrgb&w=1920&h=600&fit=crop',
-  'https://images.pexels.com/photos/3998421/pexels-photo-3998421.jpeg?auto=compress&cs=tinysrgb&w=1920&h=600&fit=crop',
+  {
+    image: 'https://images.pexels.com/photos/3998419/pexels-photo-3998419.jpeg?auto=compress&cs=tinysrgb&w=1920&h=600&fit=crop',
+    title: '🎄 Promoção de Natal',
+    subtitle: 'Cuidado especial para você brilhar nas festas!',
+    showOverlay: true,
+  },
+  {
+    image: 'https://images.pexels.com/photos/1813272/pexels-photo-1813272.jpeg?auto=compress&cs=tinysrgb&w=1920&h=600&fit=crop',
+    title: '✨ Ofertas Especiais',
+    subtitle: 'Agende agora e garante seu melhor visual!',
+    showOverlay: true,
+  },
+  {
+    image: 'https://images.pexels.com/photos/3998421/pexels-photo-3998421.jpeg?auto=compress&cs=tinysrgb&w=1920&h=600&fit=crop',
+    title: '🎁 Descontos Imperdíveis',
+    subtitle: 'Presenteie-se com um visual incrível!',
+    showOverlay: true,
+  },
 ]
 
 function App() {
@@ -1382,13 +1457,19 @@ function App() {
 
           {bannerImages.length > 0 && (
             <BannerCarousel>
-              {bannerImages.map((image, index) => (
+              {bannerImages.map((banner, index) => (
                 <BannerSlide key={index} active={bannerIndex === index}>
                   <BannerImage 
-                    src={image} 
-                    alt={`Banner ${index + 1}`}
+                    src={banner.image} 
+                    alt={banner.title}
                     loading={index === 0 ? 'eager' : 'lazy'}
                   />
+                  {banner.showOverlay && (
+                    <BannerOverlay>
+                      <BannerTitle>{banner.title}</BannerTitle>
+                      <BannerSubtitle>{banner.subtitle}</BannerSubtitle>
+                    </BannerOverlay>
+                  )}
                 </BannerSlide>
               ))}
               {bannerImages.length > 1 && (
