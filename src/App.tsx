@@ -1049,6 +1049,8 @@ const servicos: {
     descricao:
       'Corte de cabelo premium com alisamento progressivo para um visual liso e sedoso.',
     preco: 'R$ 90',
+    precoOriginal: 'R$ 100',
+    emPromocao: true,
     icone: '💇',
     imagem:
       'https://images.pexels.com/photos/3998419/pexels-photo-3998419.jpeg?auto=compress&cs=tinysrgb&w=800',
@@ -1059,7 +1061,7 @@ const servicos: {
     tag: 'Apenas progressiva',
     descricao:
       'Alisamento progressivo profissional para um visual liso e sedoso duradouro.',
-    preco: 'R$ 50',
+    preco: 'R$ 70',
     icone: '✨',
     imagem:
       'https://images.pexels.com/photos/3998419/pexels-photo-3998419.jpeg?auto=compress&cs=tinysrgb&w=800',
