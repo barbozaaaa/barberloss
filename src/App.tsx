@@ -992,9 +992,19 @@ function App() {
   // Check if date is November 23rd or 24th
   const isDataBloqueada = (dataISO: string) => {
     if (!dataISO) return false
-    const [, mes, dia] = dataISO.split('-').map(Number)
-    // Mês 11 = novembro (0-indexed, então 10 = novembro)
-    return (mes === 11 && (dia === 23 || dia === 24))
+    try {
+      const partes = dataISO.split('-')
+      if (partes.length !== 3) return false
+      const ano = parseInt(partes[0], 10)
+      const mes = parseInt(partes[1], 10)
+      const dia = parseInt(partes[2], 10)
+      // Mês 11 = novembro no formato ISO (1-indexed)
+      // Verificar se é 23 ou 24 de novembro do ano atual
+      const anoAtual = new Date().getFullYear()
+      return (ano === anoAtual && mes === 11 && (dia === 23 || dia === 24))
+    } catch {
+      return false
+    }
   }
 
   // Get available times for selected date (exclude booked times and past times for today)
