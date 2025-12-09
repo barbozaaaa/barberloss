@@ -317,9 +317,10 @@ const CarouselButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10;
+  z-index: 20;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   transition: all 150ms ease;
+  pointer-events: auto;
 
   @media (max-width: 480px) {
     width: 32px;
@@ -617,21 +618,22 @@ const StepBackButton = styled.button`
 
 const DateCarousel = styled.div`
   position: relative;
-  overflow: hidden;
-  padding: 0 35px;
+  overflow: visible;
+  padding: 0 42px;
 
   @media (max-width: 480px) {
-    padding: 0 30px;
+    padding: 0 38px;
   }
 `
 
 const DateGrid = styled.div`
   display: flex;
   gap: 8px;
-  overflow: hidden;
+  overflow: visible;
   scroll-behavior: smooth;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  width: 100%;
 
   &::-webkit-scrollbar {
     display: none;
@@ -640,11 +642,12 @@ const DateGrid = styled.div`
 
 const DateCardWrapper = styled.div`
   flex-shrink: 0;
-  width: calc((100% - 32px) / 5);
+  flex: 1;
   min-width: 0;
+  max-width: calc((100% - 32px) / 5);
 
   @media (max-width: 480px) {
-    width: calc((100% - 24px) / 5);
+    max-width: calc((100% - 24px) / 5);
     min-width: 60px;
   }
 `

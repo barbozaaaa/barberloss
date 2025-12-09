@@ -21,10 +21,10 @@ function Root() {
   }, [])
 
   return (
-    <StrictMode>
+  <StrictMode>
       {isBarbeiroPage ? <Barbeiro /> : <App />}
     </StrictMode>
-  )
+)
 }
 
 createRoot(document.getElementById('root')!).render(<Root />)

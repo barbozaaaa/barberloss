@@ -48,3 +48,4 @@ Para ver TODOS os agendamentos no painel do barbeiro, configure o Firebase!
 
 **É só isso! Siga o `CONFIGURAR_FIREBASE_AGORA.md` e pronto! 🚀**
 
+

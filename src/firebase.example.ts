@@ -46,3 +46,4 @@ if (credenciaisPreenchidas) {
 export { db, credenciaisPreenchidas }
 export default app
 
+

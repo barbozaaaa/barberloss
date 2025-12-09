@@ -71,3 +71,4 @@ service cloud.firestore {
 - Limitar escrita apenas para o site
 - Limitar leitura apenas para o painel do barbeiro
 
+

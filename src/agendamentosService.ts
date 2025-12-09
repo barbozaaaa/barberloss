@@ -50,6 +50,23 @@ export const salvarAgendamento = async (agendamento: Omit<Agendamento, 'id' | 'd
       })
       console.log('✅ Agendamento salvo no Firebase com ID:', docRef.id)
       console.log('📝 Dados salvos:', agendamento)
+      
+      // Criar evento no Google Calendar (se configurado)
+      try {
+        const { criarEventoCalendario } = await import('./googleCalendarService')
+        const servicoNome = typeof agendamento.servico === 'string' ? agendamento.servico : agendamento.servico
+        await criarEventoCalendario(
+          agendamento.nome,
+          agendamento.telefone,
+          servicoNome,
+          agendamento.data,
+          agendamento.horario,
+          agendamento.preco
+        )
+      } catch (calendarError) {
+        // Não bloquear o agendamento se o Google Calendar falhar
+        console.warn('⚠️ Erro ao criar evento no Google Calendar (não crítico):', calendarError)
+      }
     } catch (error) {
       console.error('❌ Erro ao salvar no Firebase:', error)
       // Fallback para localStorage
@@ -59,6 +76,23 @@ export const salvarAgendamento = async (agendamento: Omit<Agendamento, 'id' | 'd
     // Salvar no localStorage
     console.log('💾 Salvando no localStorage (Firebase não disponível)')
     salvarNoLocalStorage(agendamento)
+    
+    // Criar evento no Google Calendar (se configurado)
+    try {
+      const { criarEventoCalendario } = await import('./googleCalendarService')
+      const servicoNome = typeof agendamento.servico === 'string' ? agendamento.servico : agendamento.servico
+      await criarEventoCalendario(
+        agendamento.nome,
+        agendamento.telefone,
+        servicoNome,
+        agendamento.data,
+        agendamento.horario,
+        agendamento.preco
+      )
+    } catch (calendarError) {
+      // Não bloquear o agendamento se o Google Calendar falhar
+      console.warn('⚠️ Erro ao criar evento no Google Calendar (não crítico):', calendarError)
+    }
   }
 }
 

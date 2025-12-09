@@ -54,3 +54,4 @@ Passos principais:
 
 Se o App.tsx foi perdido, posso recriar ele completo. Me avise!
 
+
