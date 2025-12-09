@@ -742,10 +742,10 @@ const StepBackButton = styled.button`
 const DateCarousel = styled.div`
   position: relative;
   overflow: visible;
-  padding: 0 42px;
+  padding: 0 48px;
 
   @media (max-width: 480px) {
-    padding: 0 38px;
+    padding: 0 42px;
   }
 `
 
@@ -767,10 +767,10 @@ const DateCardWrapper = styled.div`
   flex-shrink: 0;
   flex: 1;
   min-width: 0;
-  max-width: calc((100% - 32px) / 5);
+  max-width: calc((100% - 24px) / 4);
 
   @media (max-width: 480px) {
-    max-width: calc((100% - 24px) / 5);
+    max-width: calc((100% - 18px) / 4);
     min-width: 60px;
   }
 `
@@ -1544,7 +1544,7 @@ function App() {
                       </CarouselButtonLeft>
                       <DateGrid id="datas-grid">
                         {criarProximosDias(30)
-                          .slice(dataScrollIndex * 5, (dataScrollIndex + 1) * 5)
+                          .slice(dataScrollIndex * 4, (dataScrollIndex + 1) * 4)
                           .map((data) => {
                             const iso = data.toISOString().slice(0, 10)
                             const weekday = data
@@ -1578,12 +1578,12 @@ function App() {
                         type="button"
                         onClick={() => {
                           const diasDisponiveis = criarProximosDias(30)
-                          const totalGrupos = Math.ceil(diasDisponiveis.length / 5)
+                          const totalGrupos = Math.ceil(diasDisponiveis.length / 4)
                           if (dataScrollIndex < totalGrupos - 1) {
                             setDataScrollIndex(dataScrollIndex + 1)
                           }
                         }}
-                        disabled={dataScrollIndex >= Math.ceil(criarProximosDias(30).length / 5) - 1}
+                        disabled={dataScrollIndex >= Math.ceil(criarProximosDias(30).length / 4) - 1}
                       >
                         ›
                       </CarouselButtonRight>
