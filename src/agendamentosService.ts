@@ -14,7 +14,7 @@ import {
   deleteDoc
 } from 'firebase/firestore'
 
-export type ServicoId = 'corte' | 'barba' | 'corte_barba' | 'luzes' | 'pintura_global' | 'pigmentacao_corte'
+export type ServicoId = 'corte' | 'barba' | 'corte_barba' | 'luzes' | 'pintura_global' | 'pigmentacao_corte' | 'progressiva'
 
 export interface Agendamento {
   nome: string

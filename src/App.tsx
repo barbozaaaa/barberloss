@@ -831,7 +831,7 @@ const ConfirmationBody = styled.span`
   color: #a5f3fc;
 `
 
-type ServicoId = 'corte' | 'barba' | 'corte_barba' | 'luzes' | 'pintura_global' | 'pigmentacao_corte'
+type ServicoId = 'corte' | 'barba' | 'corte_barba' | 'luzes' | 'pintura_global' | 'pigmentacao_corte' | 'progressiva'
 
 interface AgendamentoForm {
   nome: string
@@ -914,6 +914,17 @@ const servicos: {
     icone: '🎨',
     imagem:
       'https://images.pexels.com/photos/3998421/pexels-photo-3998421.jpeg?auto=compress&cs=tinysrgb&w=800',
+  },
+  {
+    id: 'progressiva',
+    nome: 'Progressiva',
+    tag: 'Corte + progressiva',
+    descricao:
+      'Corte de cabelo premium com alisamento progressivo para um visual liso e sedoso.',
+    preco: 'R$ 90',
+    icone: '💇',
+    imagem:
+      'https://images.pexels.com/photos/3998419/pexels-photo-3998419.jpeg?auto=compress&cs=tinysrgb&w=800',
   },
 ]
 
