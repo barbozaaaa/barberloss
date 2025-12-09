@@ -14,7 +14,7 @@ import {
   deleteDoc
 } from 'firebase/firestore'
 
-export type ServicoId = 'corte' | 'barba' | 'corte_barba' | 'luzes' | 'pintura_global' | 'pigmentacao_corte' | 'progressiva'
+export type ServicoId = 'corte' | 'barba' | 'corte_barba' | 'luzes' | 'pintura_global' | 'pigmentacao_corte' | 'progressiva' | 'progressiva_apenas'
 
 export interface Agendamento {
   nome: string
@@ -35,9 +35,12 @@ const isFirebaseAvailable = () => {
 
 // Salvar agendamento
 export const salvarAgendamento = async (agendamento: Omit<Agendamento, 'id' | 'dataCriacao' | 'finalizado'>): Promise<void> => {
+  console.log('💾 Iniciando salvamento de agendamento:', agendamento)
+  
   if (isFirebaseAvailable()) {
     // Salvar no Firebase
     try {
+      console.log('🔥 Tentando salvar no Firebase...')
       const docRef = await addDoc(collection(db, 'agendamentos'), {
         nome: agendamento.nome,
         telefone: agendamento.telefone,
@@ -67,15 +70,34 @@ export const salvarAgendamento = async (agendamento: Omit<Agendamento, 'id' | 'd
         // Não bloquear o agendamento se o Google Calendar falhar
         console.warn('⚠️ Erro ao criar evento no Google Calendar (não crítico):', calendarError)
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Erro ao salvar no Firebase:', error)
+      console.error('❌ Detalhes do erro:', {
+        code: error?.code,
+        message: error?.message,
+        stack: error?.stack
+      })
+      
       // Fallback para localStorage
-      salvarNoLocalStorage(agendamento)
+      console.log('💾 Fazendo fallback para localStorage...')
+      try {
+        salvarNoLocalStorage(agendamento)
+        console.log('✅ Agendamento salvo no localStorage como fallback')
+      } catch (localStorageError) {
+        console.error('❌ Erro também no localStorage:', localStorageError)
+        throw new Error('Não foi possível salvar o agendamento. Verifique sua conexão e tente novamente.')
+      }
     }
   } else {
     // Salvar no localStorage
     console.log('💾 Salvando no localStorage (Firebase não disponível)')
-    salvarNoLocalStorage(agendamento)
+    try {
+      salvarNoLocalStorage(agendamento)
+      console.log('✅ Agendamento salvo no localStorage')
+    } catch (error) {
+      console.error('❌ Erro ao salvar no localStorage:', error)
+      throw new Error('Não foi possível salvar o agendamento. Verifique sua conexão e tente novamente.')
+    }
     
     // Criar evento no Google Calendar (se configurado)
     try {

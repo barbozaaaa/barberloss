@@ -831,7 +831,7 @@ const ConfirmationBody = styled.span`
   color: #a5f3fc;
 `
 
-type ServicoId = 'corte' | 'barba' | 'corte_barba' | 'luzes' | 'pintura_global' | 'pigmentacao_corte' | 'progressiva'
+type ServicoId = 'corte' | 'barba' | 'corte_barba' | 'luzes' | 'pintura_global' | 'pigmentacao_corte' | 'progressiva' | 'progressiva_apenas'
 
 interface AgendamentoForm {
   nome: string
@@ -923,6 +923,17 @@ const servicos: {
       'Corte de cabelo premium com alisamento progressivo para um visual liso e sedoso.',
     preco: 'R$ 90',
     icone: '💇',
+    imagem:
+      'https://images.pexels.com/photos/3998419/pexels-photo-3998419.jpeg?auto=compress&cs=tinysrgb&w=800',
+  },
+  {
+    id: 'progressiva_apenas',
+    nome: 'Progressiva',
+    tag: 'Apenas progressiva',
+    descricao:
+      'Alisamento progressivo profissional para um visual liso e sedoso duradouro.',
+    preco: 'R$ 50',
+    icone: '✨',
     imagem:
       'https://images.pexels.com/photos/3998419/pexels-photo-3998419.jpeg?auto=compress&cs=tinysrgb&w=800',
   },
@@ -1139,6 +1150,16 @@ function App() {
     // Salvar agendamento usando o serviço
     try {
       const { salvarAgendamento } = await import('./agendamentosService')
+      
+      console.log('💾 Tentando salvar agendamento:', {
+        nome: form.nome.trim(),
+        telefone: form.telefone.trim(),
+        data: form.data,
+        horario: form.horario,
+        servico: form.servico,
+        preco: servicoInfo?.preco || 'R$ 0',
+      })
+      
       await salvarAgendamento({
         nome: form.nome.trim(),
         telefone: form.telefone.trim(),
@@ -1147,6 +1168,8 @@ function App() {
         servico: form.servico,
         preco: servicoInfo?.preco || 'R$ 0',
       })
+      
+      console.log('✅ Agendamento salvo com sucesso!')
       
       // Mostrar mensagem de sucesso brevemente
       setMensagem('✅ Agendamento salvo! Redirecionando para WhatsApp...')
@@ -1166,9 +1189,24 @@ function App() {
       setTimeout(() => {
         window.location.href = urlWhatsApp
       }, 1000)
-    } catch (error) {
-      console.error('Erro ao salvar agendamento:', error)
-      setMensagem('❌ Erro ao salvar agendamento. Por favor, tente novamente ou entre em contato pelo WhatsApp.')
+    } catch (error: any) {
+      console.error('❌ Erro detalhado ao salvar agendamento:', error)
+      console.error('❌ Stack trace:', error?.stack)
+      console.error('❌ Mensagem:', error?.message)
+      
+      // Mostrar mensagem de erro mais detalhada
+      const mensagemErro = error?.message 
+        ? `❌ Erro: ${error.message}. Por favor, tente novamente ou entre em contato pelo WhatsApp.`
+        : '❌ Erro ao salvar agendamento. Por favor, tente novamente ou entre em contato pelo WhatsApp.'
+      
+      setMensagem(mensagemErro)
+      
+      // Mesmo com erro, permitir redirecionar para WhatsApp (o agendamento pode ter sido salvo no localStorage)
+      setTimeout(() => {
+        if (window.confirm('Houve um erro ao salvar. Deseja continuar para o WhatsApp mesmo assim?')) {
+          window.location.href = urlWhatsApp
+        }
+      }, 3000)
     }
   }
 
