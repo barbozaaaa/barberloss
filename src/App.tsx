@@ -991,9 +991,7 @@ const servicos: {
     tag: 'Navalha quente',
     descricao:
       'Barba modelada, toalha quente e finalização com massagem facial relaxante.',
-    preco: 'R$ 50',
-    precoOriginal: 'R$ 70',
-    emPromocao: true,
+    preco: 'R$ 30',
     icone: '🧔',
     imagem:
       'https://images.pexels.com/photos/1813272/pexels-photo-1813272.jpeg?auto=compress&cs=tinysrgb&w=800',
@@ -1004,7 +1002,9 @@ const servicos: {
     tag: 'Combo completo',
     descricao:
       'Corte de cabelo premium com barba desenhada. O combo perfeito para um visual impecável.',
-    preco: 'R$ 60',
+    preco: 'R$ 50',
+    precoOriginal: 'R$ 70',
+    emPromocao: true,
     icone: '💈',
     imagem:
       'https://images.pexels.com/photos/3998419/pexels-photo-3998419.jpeg?auto=compress&cs=tinysrgb&w=800',
