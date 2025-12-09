@@ -1259,7 +1259,7 @@ function App() {
                         ‹
                       </CarouselButtonLeft>
                       <DateGrid id="datas-grid">
-                        {criarProximosDias(20)
+                        {criarProximosDias(30)
                           .slice(dataScrollIndex * 5, (dataScrollIndex + 1) * 5)
                           .map((data) => {
                             const iso = data.toISOString().slice(0, 10)
@@ -1293,13 +1293,13 @@ function App() {
                       <CarouselButtonRight
                         type="button"
                         onClick={() => {
-                          const totalDias = 20
+                          const totalDias = 30
                           const totalGrupos = Math.ceil(totalDias / 5)
                           if (dataScrollIndex < totalGrupos - 1) {
                             setDataScrollIndex(dataScrollIndex + 1)
                           }
                         }}
-                        disabled={dataScrollIndex >= Math.ceil(20 / 5) - 1}
+                        disabled={dataScrollIndex >= Math.ceil(30 / 5) - 1}
                       >
                         ›
                       </CarouselButtonRight>
