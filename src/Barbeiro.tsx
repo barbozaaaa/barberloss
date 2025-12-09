@@ -402,7 +402,7 @@ const FinalizarButton = styled.button<{ finalizado?: boolean }>`
     padding: 8px 12px;
     font-size: 10px;
     letter-spacing: 0.03em;
-    width: 100%;
+    flex: 1;
   }
   
   ${({ finalizado }) => finalizado 
@@ -426,6 +426,47 @@ const FinalizarButton = styled.button<{ finalizado?: boolean }>`
         transform: translateY(0);
       }
     `
+  }
+`
+
+const CancelarButton = styled.button`
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 150ms ease;
+  white-space: nowrap;
+  min-width: fit-content;
+  flex-shrink: 0;
+  background: linear-gradient(120deg, #ef4444, #fca5a5);
+  color: #ffffff;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  
+  @media (max-width: 480px) {
+    padding: 8px 12px;
+    font-size: 10px;
+    letter-spacing: 0.03em;
+    flex: 1;
+  }
+  
+  &:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+    background: linear-gradient(120deg, #dc2626, #f87171);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 `
 
@@ -454,6 +495,7 @@ const AgendamentoActions = styled.div`
   @media (max-width: 480px) {
     width: 100%;
     justify-content: space-between;
+    gap: 8px;
   }
 `
 
@@ -889,6 +931,23 @@ function Barbeiro() {
     }
   }
 
+  const handleCancelar = async (id: string) => {
+    if (window.confirm('Tem certeza que deseja cancelar este agendamento? Esta ação não pode ser desfeita.')) {
+      try {
+        const { cancelarAgendamento } = await import('./agendamentosService')
+        await cancelarAgendamento(id)
+        // Recarregar agendamentos
+        const { buscarAgendamentos } = await import('./agendamentosService')
+        const ags = await buscarAgendamentos()
+        setAgendamentos(ags)
+        alert('✅ Agendamento cancelado com sucesso!')
+      } catch (error) {
+        console.error('Erro ao cancelar agendamento:', error)
+        alert('❌ Erro ao cancelar agendamento. Tente novamente.')
+      }
+    }
+  }
+
   const handleResetarCaixa = async () => {
     if (window.confirm('Tem certeza que deseja resetar a caixa? Todos os agendamentos finalizados serão REMOVIDOS permanentemente.')) {
       try {
@@ -1147,13 +1206,21 @@ function Barbeiro() {
                                     <AgendamentoHorario>
                                       🕐 {ag.horario}
                                     </AgendamentoHorario>
-                                    <FinalizarButton
-                                      finalizado={ag.finalizado}
-                                      onClick={() => !ag.finalizado && ag.id && handleFinalizar(ag.id)}
-                                      disabled={ag.finalizado}
-                                    >
-                                      {ag.finalizado ? '✓ Feito' : '✓ Finalizar'}
-                                    </FinalizarButton>
+                                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+                                      <CancelarButton
+                                        onClick={() => ag.id && handleCancelar(ag.id)}
+                                        disabled={ag.finalizado}
+                                      >
+                                        Cancelar
+                                      </CancelarButton>
+                                      <FinalizarButton
+                                        finalizado={ag.finalizado}
+                                        onClick={() => !ag.finalizado && ag.id && handleFinalizar(ag.id)}
+                                        disabled={ag.finalizado}
+                                      >
+                                        {ag.finalizado ? '✓ Feito' : '✓ Finalizar'}
+                                      </FinalizarButton>
+                                    </div>
                                   </AgendamentoActions>
                                 </AgendamentoCardContent>
                               </AgendamentoCard>

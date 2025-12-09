@@ -242,6 +242,36 @@ const marcarFinalizadoLocalStorage = (id: string) => {
   }
 }
 
+// Cancelar/remover agendamento
+export const cancelarAgendamento = async (id: string): Promise<void> => {
+  if (isFirebaseAvailable()) {
+    try {
+      const agendamentoRef = doc(db, 'agendamentos', id)
+      await deleteDoc(agendamentoRef)
+      console.log('✅ Agendamento cancelado/removido do Firebase')
+    } catch (error) {
+      console.error('❌ Erro ao cancelar no Firebase:', error)
+      cancelarAgendamentoLocalStorage(id)
+    }
+  } else {
+    cancelarAgendamentoLocalStorage(id)
+  }
+}
+
+const cancelarAgendamentoLocalStorage = (id: string) => {
+  try {
+    const agendamentosSalvos = localStorage.getItem('agendamentos')
+    if (agendamentosSalvos) {
+      const agendamentos: Agendamento[] = JSON.parse(agendamentosSalvos)
+      const atualizados = agendamentos.filter(ag => ag.id !== id)
+      localStorage.setItem('agendamentos', JSON.stringify(atualizados))
+      console.log('✅ Agendamento cancelado/removido do localStorage')
+    }
+  } catch (error) {
+    console.error('❌ Erro ao cancelar no localStorage:', error)
+  }
+}
+
 // Resetar todos os agendamentos finalizados (remover)
 export const resetarCaixa = async (): Promise<void> => {
   if (isFirebaseAvailable()) {
