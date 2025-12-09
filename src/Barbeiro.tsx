@@ -499,129 +499,6 @@ const AgendamentoActions = styled.div`
   }
 `
 
-const GoogleCalendarSection = styled.section`
-  margin-bottom: 32px;
-  padding: 20px;
-  border-radius: 16px;
-  background: rgba(15, 23, 42, 0.8);
-  border: 1px solid rgba(55, 65, 81, 0.5);
-  
-  @media (max-width: 480px) {
-    padding: 16px;
-    margin-bottom: 24px;
-  }
-`
-
-const GoogleCalendarHeader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
-  gap: 12px;
-`
-
-const GoogleCalendarTitle = styled.h2`
-  font-size: 14px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #e5e7eb;
-  
-  @media (min-width: 480px) {
-    font-size: 18px;
-    letter-spacing: 0.18em;
-  }
-`
-
-const GoogleCalendarStatus = styled.div<{ configured: boolean }>`
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 11px;
-  font-weight: 600;
-  background: ${({ configured }) => configured ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)'};
-  color: ${({ configured }) => configured ? '#86efac' : '#fca5a5'};
-  border: 1px solid ${({ configured }) => configured ? 'rgba(34, 197, 94, 0.3)' : 'rgba(239, 68, 68, 0.3)'};
-  
-  @media (min-width: 480px) {
-    font-size: 12px;
-    padding: 8px 16px;
-  }
-`
-
-const GoogleCalendarForm = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  
-  @media (min-width: 768px) {
-    flex-direction: row;
-    align-items: flex-end;
-  }
-`
-
-const GoogleCalendarInput = styled.input`
-  flex: 1;
-  padding: 10px 14px;
-  border-radius: 8px;
-  border: 1px solid rgba(55, 65, 81, 0.9);
-  background: rgba(15, 23, 42, 0.95);
-  color: #e5e7eb;
-  font-size: 13px;
-  
-  &::placeholder {
-    color: #6b7280;
-  }
-  
-  &:focus {
-    outline: none;
-    border-color: rgba(251, 191, 36, 0.7);
-    box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
-  }
-  
-  @media (max-width: 480px) {
-    font-size: 12px;
-    padding: 8px 12px;
-  }
-`
-
-const GoogleCalendarButton = styled.button`
-  padding: 10px 20px;
-  border-radius: 8px;
-  border: none;
-  background: linear-gradient(120deg, #fbbf24, #f59e0b);
-  color: #052e16;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 150ms ease, filter 150ms ease;
-  white-space: nowrap;
-  
-  &:hover {
-    transform: translateY(-1px);
-    filter: brightness(1.05);
-  }
-  
-  &:active {
-    transform: translateY(0);
-  }
-  
-  @media (max-width: 480px) {
-    font-size: 12px;
-    padding: 8px 16px;
-  }
-`
-
-const GoogleCalendarInfo = styled.p`
-  margin-top: 12px;
-  font-size: 11px;
-  color: #9ca3af;
-  line-height: 1.5;
-  
-  @media (max-width: 480px) {
-    font-size: 10px;
-  }
-`
-
 const ResetButton = styled.button`
   padding: 10px 16px;
   border-radius: 999px;
@@ -750,28 +627,8 @@ const organizarAgendamentosPorData = (agendamentos: Agendamento[]) => {
 function Barbeiro() {
   const [agendamentos, setAgendamentos] = useState<Agendamento[]>([])
   const [erro, setErro] = useState<string | null>(null)
-  const [googleCalendarToken, setGoogleCalendarToken] = useState<string>('')
-  const [googleCalendarId, setGoogleCalendarId] = useState<string>('primary')
-  const [googleCalendarConfigured, setGoogleCalendarConfigured] = useState<boolean>(false)
 
   useEffect(() => {
-    // Carregar configuração do Google Calendar
-    const carregarConfigGoogleCalendar = async () => {
-      try {
-        const { getGoogleCalendarConfig, isGoogleCalendarConfigured } = await import('./googleCalendarService')
-        const config = getGoogleCalendarConfig()
-        if (config) {
-          setGoogleCalendarToken(config.accessToken)
-          setGoogleCalendarId(config.calendarId)
-          setGoogleCalendarConfigured(isGoogleCalendarConfigured())
-        }
-      } catch (error) {
-        console.error('Erro ao carregar configuração do Google Calendar:', error)
-      }
-    }
-    
-    carregarConfigGoogleCalendar()
-    
     const carregarAgendamentos = async () => {
       try {
         setErro(null)
@@ -966,34 +823,6 @@ function Barbeiro() {
     }
   }
 
-  const handleSalvarGoogleCalendar = async () => {
-    if (!googleCalendarToken.trim()) {
-      alert('⚠️ Por favor, insira o token de acesso do Google Calendar.')
-      return
-    }
-    
-    try {
-      const { salvarGoogleCalendarConfig, isGoogleCalendarConfigured } = await import('./googleCalendarService')
-      salvarGoogleCalendarConfig(googleCalendarToken.trim(), googleCalendarId.trim() || 'primary')
-      setGoogleCalendarConfigured(isGoogleCalendarConfigured())
-      alert('✅ Configuração do Google Calendar salva com sucesso! Os próximos agendamentos serão adicionados automaticamente ao seu calendário.')
-    } catch (error) {
-      console.error('Erro ao salvar configuração:', error)
-      alert('❌ Erro ao salvar configuração. Tente novamente.')
-    }
-  }
-
-  const handleRemoverGoogleCalendar = () => {
-    if (window.confirm('Tem certeza que deseja remover a configuração do Google Calendar?')) {
-      localStorage.removeItem('google_calendar_access_token')
-      localStorage.removeItem('google_calendar_id')
-      setGoogleCalendarToken('')
-      setGoogleCalendarId('primary')
-      setGoogleCalendarConfigured(false)
-      alert('✅ Configuração do Google Calendar removida.')
-    }
-  }
-
   // Se houver erro, mostrar mensagem
   if (erro) {
     return (
@@ -1044,54 +873,6 @@ function Barbeiro() {
               <BrandSubtitle>Painel do Barbeiro</BrandSubtitle>
             </LogoText>
           </Header>
-
-          <GoogleCalendarSection>
-            <GoogleCalendarHeader>
-              <GoogleCalendarTitle>📅 Google Calendar</GoogleCalendarTitle>
-              <GoogleCalendarStatus configured={googleCalendarConfigured}>
-                {googleCalendarConfigured ? '✅ Configurado' : '❌ Não configurado'}
-              </GoogleCalendarStatus>
-            </GoogleCalendarHeader>
-            
-            {googleCalendarConfigured ? (
-              <>
-                <GoogleCalendarInfo>
-                  ✅ Google Calendar está configurado. Os agendamentos serão adicionados automaticamente ao seu calendário.
-                </GoogleCalendarInfo>
-                <GoogleCalendarButton 
-                  onClick={handleRemoverGoogleCalendar}
-                  style={{ marginTop: '12px', background: 'rgba(239, 68, 68, 0.2)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.4)' }}
-                >
-                  Remover Configuração
-                </GoogleCalendarButton>
-              </>
-            ) : (
-              <>
-                <GoogleCalendarForm>
-                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <GoogleCalendarInput
-                      type="text"
-                      placeholder="Token de acesso do Google Calendar"
-                      value={googleCalendarToken}
-                      onChange={(e) => setGoogleCalendarToken(e.target.value)}
-                    />
-                    <GoogleCalendarInput
-                      type="text"
-                      placeholder="ID do Calendário (deixe 'primary' para o calendário principal)"
-                      value={googleCalendarId}
-                      onChange={(e) => setGoogleCalendarId(e.target.value)}
-                    />
-                  </div>
-                  <GoogleCalendarButton onClick={handleSalvarGoogleCalendar}>
-                    Salvar
-                  </GoogleCalendarButton>
-                </GoogleCalendarForm>
-                <GoogleCalendarInfo>
-                  💡 Para obter o token de acesso, você precisa criar um projeto no Google Cloud Console, habilitar a API do Google Calendar e gerar um token OAuth. Veja o guia completo em <strong>GUIA_GOOGLE_CALENDAR.md</strong>
-                </GoogleCalendarInfo>
-              </>
-            )}
-          </GoogleCalendarSection>
 
           <AgendamentosSection>
             <CaixaHeader>
