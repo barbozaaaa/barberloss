@@ -577,6 +577,49 @@ const ServicePrice = styled.span`
   font-size: 13px;
   font-weight: 500;
   color: #fbbf24;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-start;
+`
+
+const ServicePriceRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+`
+
+const ServicePriceOriginal = styled.span`
+  font-size: 11px;
+  font-weight: 400;
+  color: #9ca3af;
+  text-decoration: line-through;
+  text-decoration-color: #ef4444;
+`
+
+const ServicePricePromocao = styled.span`
+  font-size: 13px;
+  font-weight: 600;
+  color: #22c55e;
+`
+
+const PromocaoBadge = styled.span`
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: linear-gradient(120deg, #ef4444, #f87171);
+  color: #ffffff;
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-left: 4px;
+  
+  @media (max-width: 480px) {
+    font-size: 7px;
+    padding: 1px 5px;
+  }
 `
 
 const FormCard = styled.section`
@@ -927,6 +970,8 @@ const servicos: {
   tag: string
   descricao: string
   preco: string
+  precoOriginal?: string
+  emPromocao?: boolean
   icone: string
   imagem: string
 }[] = [
@@ -946,7 +991,9 @@ const servicos: {
     tag: 'Navalha quente',
     descricao:
       'Barba modelada, toalha quente e finalização com massagem facial relaxante.',
-    preco: 'R$ 30',
+    preco: 'R$ 50',
+    precoOriginal: 'R$ 70',
+    emPromocao: true,
     icone: '🧔',
     imagem:
       'https://images.pexels.com/photos/1813272/pexels-photo-1813272.jpeg?auto=compress&cs=tinysrgb&w=800',
@@ -1420,7 +1467,17 @@ function App() {
                             </ServiceTitleRow>
                             <ServiceDescription>{servico.descricao}</ServiceDescription>
                             <ServiceMetaRow>
-                              <ServicePrice>{servico.preco}</ServicePrice>
+                              <ServicePrice>
+                                {servico.emPromocao && servico.precoOriginal ? (
+                                  <ServicePriceRow>
+                                    <ServicePriceOriginal>{servico.precoOriginal}</ServicePriceOriginal>
+                                    <ServicePricePromocao>{servico.preco}</ServicePricePromocao>
+                                    <PromocaoBadge>Promoção</PromocaoBadge>
+                                  </ServicePriceRow>
+                                ) : (
+                                  <span style={{ color: '#fbbf24' }}>{servico.preco}</span>
+                                )}
+                              </ServicePrice>
                             </ServiceMetaRow>
                           </ServiceContent>
                         </ServiceCard>
