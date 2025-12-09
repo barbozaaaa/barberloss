@@ -569,7 +569,7 @@ const servicos: {
   { id: 'luzes', nome: 'Corte com luzes (platinado)', icone: '⭐', preco: 100 },
   { id: 'pintura_global', nome: 'Platinado', icone: '✨', preco: 120 },
   { id: 'pigmentacao_corte', nome: 'Pigmentação e Corte', icone: '🎨', preco: 70 },
-  { id: 'progressiva', nome: 'Progressiva', icone: '💇', preco: 90 },
+  { id: 'progressiva', nome: 'Progressiva e Corte', icone: '💇', preco: 90 },
   { id: 'progressiva_apenas', nome: 'Progressiva', icone: '✨', preco: 50 },
 ]
 

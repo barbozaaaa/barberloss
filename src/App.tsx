@@ -1044,7 +1044,7 @@ const servicos: {
   },
   {
     id: 'progressiva',
-    nome: 'Progressiva',
+    nome: 'Progressiva e Corte',
     tag: 'Corte',
     descricao:
       'Corte de cabelo premium com alisamento progressivo para um visual liso e sedoso.',
