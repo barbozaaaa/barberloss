@@ -436,9 +436,9 @@ const ServiceContent = styled.div`
 
 const ServiceTitleRow = styled.div`
   display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  align-items: baseline;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
 `
 
 const ServiceName = styled.div`
@@ -447,6 +447,7 @@ const ServiceName = styled.div`
   color: #f9fafb;
   word-break: break-word;
   line-height: 1.3;
+  width: 100%;
 
   @media (max-width: 480px) {
     font-size: 13px;
@@ -458,8 +459,8 @@ const ServiceTag = styled.span`
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: #fbbf24;
-  white-space: nowrap;
-  flex-shrink: 0;
+  word-break: break-word;
+  line-height: 1.2;
 
   @media (max-width: 480px) {
     font-size: 8px;
@@ -918,7 +919,7 @@ const servicos: {
   {
     id: 'progressiva',
     nome: 'Progressiva',
-    tag: 'Corte + progressiva',
+    tag: 'Corte',
     descricao:
       'Corte de cabelo premium com alisamento progressivo para um visual liso e sedoso.',
     preco: 'R$ 90',
