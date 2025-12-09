@@ -33,6 +33,81 @@ const Page = styled.div`
   background-attachment: fixed;
 `
 
+const BannerCarousel = styled.div`
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  margin-bottom: 0;
+  
+  @media (max-width: 480px) {
+    margin-bottom: 0;
+  }
+`
+
+const BannerSlide = styled.div<{ active: boolean }>`
+  display: ${({ active }) => active ? 'block' : 'none'};
+  width: 100%;
+  position: relative;
+  opacity: ${({ active }) => active ? 1 : 0};
+  transition: opacity 0.6s ease-in-out;
+`
+
+const BannerImage = styled.img`
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  
+  @media (max-width: 480px) {
+    min-height: 250px;
+    object-fit: cover;
+  }
+  
+  @media (min-width: 481px) and (max-width: 768px) {
+    min-height: 350px;
+  }
+  
+  @media (min-width: 769px) {
+    min-height: 450px;
+    max-height: 600px;
+  }
+`
+
+const BannerIndicators = styled.div`
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+  
+  @media (max-width: 480px) {
+    bottom: 12px;
+    gap: 6px;
+  }
+`
+
+const BannerIndicator = styled.button<{ active: boolean }>`
+  width: ${({ active }) => active ? '24px' : '8px'};
+  height: 8px;
+  border-radius: 4px;
+  border: none;
+  background: ${({ active }) => active ? 'rgba(251, 191, 36, 0.95)' : 'rgba(255, 255, 255, 0.4)'};
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+  
+  @media (max-width: 480px) {
+    width: ${({ active }) => active ? '20px' : '6px'};
+    height: 6px;
+  }
+  
+  &:hover {
+    background: ${({ active }) => active ? 'rgba(251, 191, 36, 1)' : 'rgba(255, 255, 255, 0.6)'};
+  }
+`
+
 const Shell = styled.div`
   max-width: 1120px;
   margin: 0 auto;
@@ -967,6 +1042,15 @@ const horariosPadrao = Array.from({ length: 12 }, (_, i) => {
   return `${hora.toString().padStart(2, '0')}:00`
 })
 
+// Imagens do carrossel - SUBSTITUA pelas URLs das suas imagens
+// Dimensões recomendadas: 1920x600px (desktop) ou proporção 16:5
+// Formato: JPG ou WebP, máximo 500KB por imagem
+const bannerImages = [
+  'https://images.pexels.com/photos/3998419/pexels-photo-3998419.jpeg?auto=compress&cs=tinysrgb&w=1920&h=600&fit=crop',
+  'https://images.pexels.com/photos/1813272/pexels-photo-1813272.jpeg?auto=compress&cs=tinysrgb&w=1920&h=600&fit=crop',
+  'https://images.pexels.com/photos/3998421/pexels-photo-3998421.jpeg?auto=compress&cs=tinysrgb&w=1920&h=600&fit=crop',
+]
+
 function App() {
   const [selecionado, setSelecionado] = useState<ServicoId>('corte')
   const [form, setForm] = useState<AgendamentoForm>({
@@ -980,6 +1064,7 @@ function App() {
   const [etapaHorario, setEtapaHorario] = useState<'data' | 'hora'>('data')
   const [dataScrollIndex, setDataScrollIndex] = useState(0)
   const [agendamentosExistentes, setAgendamentosExistentes] = useState<Array<{data: string, horario: string}>>([])
+  const [bannerIndex, setBannerIndex] = useState(0)
 
   // Load existing appointments to filter booked times
   useEffect(() => {
@@ -999,6 +1084,17 @@ function App() {
     carregarAgendamentos()
     // Refresh every 5 seconds to get latest bookings
     const interval = setInterval(carregarAgendamentos, 5000)
+    return () => clearInterval(interval)
+  }, [])
+
+  // Navegação automática do carrossel
+  useEffect(() => {
+    if (bannerImages.length <= 1) return
+    
+    const interval = setInterval(() => {
+      setBannerIndex((prev) => (prev + 1) % bannerImages.length)
+    }, 5000) // Muda a cada 5 segundos
+    
     return () => clearInterval(interval)
   }, [])
 
@@ -1215,6 +1311,31 @@ function App() {
     <>
       <GlobalStyle />
       <Page>
+        {bannerImages.length > 0 && (
+          <BannerCarousel>
+            {bannerImages.map((image, index) => (
+              <BannerSlide key={index} active={bannerIndex === index}>
+                <BannerImage 
+                  src={image} 
+                  alt={`Banner ${index + 1}`}
+                  loading={index === 0 ? 'eager' : 'lazy'}
+                />
+              </BannerSlide>
+            ))}
+            {bannerImages.length > 1 && (
+              <BannerIndicators>
+                {bannerImages.map((_, index) => (
+                  <BannerIndicator
+                    key={index}
+                    active={bannerIndex === index}
+                    onClick={() => setBannerIndex(index)}
+                    aria-label={`Ir para slide ${index + 1}`}
+                  />
+                ))}
+              </BannerIndicators>
+            )}
+          </BannerCarousel>
+        )}
         <Shell>
           <Header>
             <div></div>
