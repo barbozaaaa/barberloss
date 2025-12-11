@@ -81,7 +81,7 @@ export const salvarAgendamento = async (agendamento: Omit<Agendamento, 'id' | 'd
       // Fallback para localStorage
       console.log('💾 Fazendo fallback para localStorage...')
       try {
-        salvarNoLocalStorage(agendamento)
+      salvarNoLocalStorage(agendamento)
         console.log('✅ Agendamento salvo no localStorage como fallback')
       } catch (localStorageError) {
         console.error('❌ Erro também no localStorage:', localStorageError)
@@ -92,7 +92,7 @@ export const salvarAgendamento = async (agendamento: Omit<Agendamento, 'id' | 'd
     // Salvar no localStorage
     console.log('💾 Salvando no localStorage (Firebase não disponível)')
     try {
-      salvarNoLocalStorage(agendamento)
+    salvarNoLocalStorage(agendamento)
       console.log('✅ Agendamento salvo no localStorage')
     } catch (error) {
       console.error('❌ Erro ao salvar no localStorage:', error)

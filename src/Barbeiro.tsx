@@ -994,13 +994,13 @@ function Barbeiro() {
                                       >
                                         Cancelar
                                       </CancelarButton>
-                                      <FinalizarButton
-                                        finalizado={ag.finalizado}
-                                        onClick={() => !ag.finalizado && ag.id && handleFinalizar(ag.id)}
-                                        disabled={ag.finalizado}
-                                      >
-                                        {ag.finalizado ? '✓ Feito' : '✓ Finalizar'}
-                                      </FinalizarButton>
+                                    <FinalizarButton
+                                      finalizado={ag.finalizado}
+                                      onClick={() => !ag.finalizado && ag.id && handleFinalizar(ag.id)}
+                                      disabled={ag.finalizado}
+                                    >
+                                      {ag.finalizado ? '✓ Feito' : '✓ Finalizar'}
+                                    </FinalizarButton>
                                     </div>
                                   </AgendamentoActions>
                                 </AgendamentoCardContent>

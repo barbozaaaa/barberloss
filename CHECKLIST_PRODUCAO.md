@@ -72,3 +72,7 @@ service cloud.firestore {
 - Limitar leitura apenas para o painel do barbeiro
 
 
+
+
+
+

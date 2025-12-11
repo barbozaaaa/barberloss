@@ -93,3 +93,7 @@ Se você não quiser configurar Firebase agora, o sistema funciona com localStor
 Para usar apenas localStorage, não precisa fazer nada - já está funcionando assim por padrão.
 
 
+
+
+
+
