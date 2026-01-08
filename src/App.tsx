@@ -1227,11 +1227,10 @@ function App() {
     return () => clearInterval(interval)
   }, [])
 
-  // Check if date is December 23rd or 24th
-  const isDataBloqueada = (dataISO: string) => {
+  // Check if date is January 1st (needs special time handling from 2:26)
+  const isJaneiro1 = (dataISO: string) => {
     if (!dataISO || dataISO.length < 10) return false
     try {
-      // Formato esperado: YYYY-MM-DD
       const partes = dataISO.split('-')
       if (partes.length !== 3) {
         return false
@@ -1241,19 +1240,15 @@ function App() {
       const mes = parseInt(partes[1], 10)
       const dia = parseInt(partes[2], 10)
       
-      // Validar se os valores são números válidos
       if (isNaN(ano) || isNaN(mes) || isNaN(dia)) {
         return false
       }
       
-      // Mês 12 = dezembro no formato ISO (1-indexed, então 12 = dezembro)
-      // Verificar se é 23 ou 24 de dezembro do ano atual
+      // Mês 1 = janeiro no formato ISO
       const anoAtual = new Date().getFullYear()
-      const resultado = (ano === anoAtual && mes === 12 && (dia === 23 || dia === 24))
-      
-      return resultado
+      return (ano === anoAtual && mes === 1 && dia === 1)
     } catch (error) {
-      console.error('❌ Erro ao verificar data bloqueada:', error, dataISO)
+      console.error('❌ Erro ao verificar data:', error, dataISO)
       return false
     }
   }
@@ -1267,16 +1262,12 @@ function App() {
     
     console.log('📅 Data selecionada:', form.data)
     
-    // Se for dia 23 ou 24 de novembro, retornar array vazio (todos ocupados)
-    const bloqueada = isDataBloqueada(form.data)
-    if (bloqueada) {
-      console.log('🚫 Data bloqueada (23 ou 24 de novembro), retornando array vazio')
-      return []
-    }
-    
-    // Check if selected date is today
+    // Check if selected date is today (usando horário local, não UTC)
     const hoje = new Date()
-    const hojeISO = hoje.toISOString().slice(0, 10)
+    const hojeAno = hoje.getFullYear()
+    const hojeMes = String(hoje.getMonth() + 1).padStart(2, '0')
+    const hojeDia = String(hoje.getDate()).padStart(2, '0')
+    const hojeISO = `${hojeAno}-${hojeMes}-${hojeDia}`
     const isHoje = form.data === hojeISO
     
     // Get current time in HH:MM format
@@ -1293,6 +1284,16 @@ function App() {
     let horariosFiltrados = horariosPadrao.filter(hora => !horariosOcupados.includes(hora))
     
     console.log('⏰ Horários disponíveis antes de filtrar passados:', horariosFiltrados.length)
+    
+    // Special handling for January 1st: only allow times from 2:26 onwards
+    const isJan1 = isJaneiro1(form.data)
+    if (isJan1) {
+      horariosFiltrados = horariosFiltrados.filter(hora => {
+        // Only allow times from 2:26 onwards on January 1st
+        return hora >= '02:26'
+      })
+      console.log('📅 Janeiro 1: filtrando horários a partir de 2:26')
+    }
     
     // If it's today, filter out past times
     if (isHoje) {
@@ -1628,7 +1629,11 @@ function App() {
                         {criarProximosDias(30)
                           .slice(dataScrollIndex * 4, (dataScrollIndex + 1) * 4)
                           .map((data) => {
-                            const iso = data.toISOString().slice(0, 10)
+                            // Formatar data no formato YYYY-MM-DD usando horário local (não UTC)
+                            const ano = data.getFullYear()
+                            const mes = String(data.getMonth() + 1).padStart(2, '0')
+                            const dia = String(data.getDate()).padStart(2, '0')
+                            const iso = `${ano}-${mes}-${dia}`
                             const weekday = data
                               .toLocaleDateString('pt-BR', { weekday: 'short' })
                               .replace('.', '')
@@ -1689,9 +1694,7 @@ function App() {
                         ))
                       ) : (
                         <div style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#9ca3af', padding: '20px', fontSize: '13px' }}>
-                          {isDataBloqueada(form.data) 
-                            ? '❌ Esta data não possui horários disponíveis. Todos os horários já estão reservados.'
-                            : 'Todos os horários estão ocupados para esta data. Por favor, escolha outra data.'}
+                          Todos os horários estão ocupados para esta data. Por favor, escolha outra data.
                         </div>
                       )}
                     </TimeGrid>

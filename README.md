@@ -206,3 +206,7 @@ Sistema desenvolvido para **Barber Loss - Cuidando da sua autoestima**
 
 **💡 Dica**: Certifique-se de configurar o Firebase para ter sincronização em tempo real dos agendamentos entre dispositivos!
 
+
+
+
+
